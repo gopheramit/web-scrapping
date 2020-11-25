@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -20,15 +19,4 @@ func about(w http.ResponseWriter, r *http.Request) {
 
 func getStarted(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Get started with web scrapping!"))
-}
-
-func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/about", about)
-	mux.HandleFunc("/getstarted", getStarted)
-
-	log.Println("starting server on 4000")
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
 }
