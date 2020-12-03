@@ -20,14 +20,15 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/about", about)
-	mux.HandleFunc("/getstarted", getStarted)
+	app := &application{
+		errorLog: errorLog,
+		infoLog:  infoLog,
+	}
+
 	srv := &http.Server{
 		Addr:     *addr,
 		ErrorLog: errorLog,
-		Handler:  mux,
+		Handler:  app.routes(),
 	}
 	infoLog.Printf("Starting server on %s", *addr)
 	err := srv.ListenAndServe()
