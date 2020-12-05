@@ -35,6 +35,10 @@ func (app *application) about(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("About webscarpping!"))
 }
 
-func (app *application) getStarted(w http.ResponseWriter, r *http.Request) {
+func (app *application) documentation(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Get started with web scrapping!"))
+}
+
+func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("About pricing!"))
 }
