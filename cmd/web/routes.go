@@ -6,6 +6,8 @@ import (
 	"github.com/justinas/alice"
 )
 
+//might need to change third party routing handler
+
 func (app *application) routes() http.Handler {
 
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeader)
