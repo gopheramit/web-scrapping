@@ -6,6 +6,18 @@ import (
 	"runtime/debug"
 )
 
+func (app *application) render(w http.ResponseWriter, r *http.Request, name string) {
+	ts, ok := app.templateCache[name]
+	if !ok {
+		app.serverError(w, fmt.Errorf("The template %s does not exist", name))
+
+	}
+	err := ts.Execute(w, nil)
+	if err != nil {
+		app.serverError(w, err)
+	}
+}
+
 func (app *application) serverError(w http.ResponseWriter, err error) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
 	app.errorLog.Println(trace)
