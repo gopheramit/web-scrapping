@@ -1,34 +1,14 @@
 {{template "base" .}}
-{{define "title"}}About Pricing {{end}}
+{{define "title"}}Signup Page{{end}}
 {{define "main"}}
 
-<div class="mail">
-<h2>Input an email and Submit</h2>
-<form name="form1" action="#"> 
-<ul>
-<li><input type='text' name='text1'/></li>
-<li>&nbsp;</li>
-<li class="submit"><input type="submit" name="submit" value="Submit" onclick="ValidateEmail(document.form1.text1)"/></li>
-<li>&nbsp;</li>
-</ul>
+<form action='/signup' method='POST'>
+<div>
+<label>Email:</label>
+<input type='text' name='title'>
+</div>
+<div>
+<input type='submit' value='Submit Email!'>
+</div>
 </form>
-</div>
-<script>
-function ValidateEmail(inputText)
-{
-var mailformat = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)$/;
-if(inputText.value.match(mailformat))
-{
-alert("Valid email address!");
-document.form1.text1.focus();
-return true;
-}
-else
-{
-alert("You have entered an invalid email address!");
-document.form1.text1.focus();
-return false;
-}
-</script>
-</div>
 {{end}}
