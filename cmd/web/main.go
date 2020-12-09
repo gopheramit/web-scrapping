@@ -42,7 +42,7 @@ func main() {
 		errorLog:      errorLog,
 		infoLog:       infoLog,
 		templateCache: templateCache,
-		scraps & mysql.ScrapModel{DB: db},
+		//scraps & mysql.ScrapModel{DB: db},
 	}
 
 	srv := &http.Server{

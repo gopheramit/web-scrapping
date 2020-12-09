@@ -49,3 +49,7 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 	//w.Write([]byte("About pricing!"))
 
 }
+
+func (app *application) signup(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "signup.page.tmpl")
+}
