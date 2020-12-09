@@ -18,6 +18,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/about", http.HandlerFunc(app.about))
 	mux.Get("/documentation", http.HandlerFunc(app.documentation))
 	mux.Get("/pricing", http.HandlerFunc(app.pricing))
+	mux.Get("/login", http.HandlerFunc(app.login))
 
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	mux.Get("/assets/", http.StripPrefix("/assets/", fileServer))

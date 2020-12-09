@@ -40,6 +40,10 @@ func (app *application) documentation(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Get started with web scrapping!"))
 }
 
+func (app *application) login(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "login.page.tmpl")
+}
+
 func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "pricing.page.tmpl")
 	//w.Write([]byte("About pricing!"))
