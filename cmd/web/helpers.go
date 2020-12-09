@@ -2,8 +2,12 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"runtime/debug"
+	"time"
+
+	"github.com/oklog/ulid"
 )
 
 func (app *application) render(w http.ResponseWriter, r *http.Request, name string) {
@@ -16,6 +20,13 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 	if err != nil {
 		app.serverError(w, err)
 	}
+}
+
+func (app *application) genUlid() ulid.ULID {
+	t := time.Now().UTC()
+	entropy := rand.New(rand.NewSource(t.UnixNano()))
+	id := ulid.MustNew(ulid.Timestamp(t), entropy)
+	return id
 }
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
