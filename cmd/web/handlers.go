@@ -53,3 +53,7 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl")
 }
+
+func (app *application) showkey(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "keys.page.tmpl")
+}
