@@ -22,6 +22,8 @@ func (app *application) routes() http.Handler {
 	mux.Get("/signup", http.HandlerFunc(app.signup))
 	mux.Post("/showkeys", http.HandlerFunc(app.showkey))
 
+	mux.Get("/scrap", http.HandlerFunc(app.showScrap))
+
 	fileServer := http.FileServer(http.Dir("./assets/"))
 	mux.Get("/assets/", http.StripPrefix("/assets/", fileServer))
 
