@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/gopheramit/web-scrapping/pkg/models"
 )
@@ -128,9 +130,24 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	email := r.PostForm.Get("email")
+	errors := make(map[string]string)
+	email := r.PostForm.Get("Email")
+	fmt.Println(email)
+	if strings.TrimSpace(email) == "" {
+		errors["email"] = "This field cannot be blank"
+	} else if utf8.RuneCountInString(email) > 100 {
+		errors["email"] = "This field is too long (maximum is 100 characters)"
+	}
+	if len(errors) > 0 {
+		app.render(w, r, "signup.page.tmpl", &templateData{
+			FormErrors: errors,
+			FormData:   r.PostForm,
+		})
+		return
+	}
 	key := app.genUlid()
-	id, err := app.scraps.Insert(email, key, "30")
+	keystr := key.String()
+	id, err := app.scraps.Insert(email, keystr, "30")
 	if err != nil {
 		app.serverError(w, err)
 		return
