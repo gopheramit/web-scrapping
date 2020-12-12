@@ -1,14 +1,14 @@
-{{define "title"}}Scrap #{{.ID}}{{end}}
+{{template "base" .}}
+{{define "title"}}Scrap #{{.Scrap.ID}}{{end}}
 {{define "main"}}
 <div class='scrap'>
 <div class='metadata'>
-<strong>{{.Email}}</strong>
-<span>#{{.ID}}</span>
+<strong>{{.Scrap.Email}}</strong>
+<span>#{{.Scrap.ID}}</span>
 </div>
-
 <div class='metadata'>
-<time>Created: {{.Created}}</time>
-<time>Expires: {{.Expires}}</time>
+<time>Created: {{.Scrap.Created}}</time>
+<time>Expires: {{.Scrap.Expires}}</time>
 </div>
 </div>
 {{end}}

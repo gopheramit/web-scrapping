@@ -3,10 +3,13 @@ package main
 import (
 	"html/template"
 	"path/filepath"
+
+	"github.com/gopheramit/web-scrapping/pkg/models"
 )
 
 type templateData struct {
 	CurrentYear int
+	Scrap       *models.Scrap
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {
