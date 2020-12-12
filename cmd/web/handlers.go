@@ -131,7 +131,7 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	errors := make(map[string]string)
-	email := r.PostForm.Get("Email")
+	email := r.PostForm.Get("email")
 	fmt.Println(email)
 	if strings.TrimSpace(email) == "" {
 		errors["email"] = "This field cannot be blank"
@@ -139,7 +139,7 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		errors["email"] = "This field is too long (maximum is 100 characters)"
 	}
 	if len(errors) > 0 {
-		app.render(w, r, "signup.page.tmpl", &templateData{
+		app.render(w, r, "login.page.tmpl", &templateData{
 			FormErrors: errors,
 			FormData:   r.PostForm,
 		})
@@ -153,5 +153,5 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
-	//app.render(w, r, "keys.page.tmpl", nil)
+	//	app.render(w, r, "keys.page.tmpl", nil)
 }
