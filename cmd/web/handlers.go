@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -84,7 +83,10 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
+	//	var=r.URL.Query().Get("id")
+	//	fmt.Println(var)
+	//fmt.Println(id)
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
@@ -100,24 +102,12 @@ func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	data := &templateData{Scrap: s}
-	files := []string{
-		"./ui/html/show.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
+	app.render(w, r, "show.page.tmpl", &templateData{
+		Scrap: s,
+	})
 
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	err = ts.Execute(w, data)
-	if err != nil {
-		app.serverError(w, err)
-	}
 	// Write the snippet data as a plain-text HTTP response body.
-	fmt.Fprintf(w, "%v", s)
+	//fmt.Fprintf(w, "%v", s)
 }
 
 func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
@@ -139,7 +129,7 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		errors["email"] = "This field is too long (maximum is 100 characters)"
 	}
 	if len(errors) > 0 {
-		app.render(w, r, "login.page.tmpl", &templateData{
+		app.render(w, r, "signup.page.tmpl", &templateData{
 			FormErrors: errors,
 			FormData:   r.PostForm,
 		})
