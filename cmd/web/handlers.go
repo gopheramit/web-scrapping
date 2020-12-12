@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -48,6 +49,23 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "pricing.page.tmpl")
 	//w.Write([]byte("About pricing!"))
 
+}
+
+func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost)
+		app.clientError(w, http.StatusMethodNotAllowed)
+		return
+	}
+	email := "abcd@gmail.com"
+	expires := "8"
+
+	id, err := app.scraps.Insert(email, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
 }
 
 func (app *application) signup(w http.ResponseWriter, r *http.Request) {

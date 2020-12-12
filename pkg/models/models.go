@@ -9,7 +9,7 @@ var ErrNoRecord = errors.New("models: no matching record found")
 
 type Scrap struct {
 	ID      int
-	Emial   string
+	Email   string
 	Created time.Time
 	Expires time.Time
 }
