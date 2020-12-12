@@ -1,10 +1,11 @@
-CREATE DATABASE scrap CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE web CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-use scrap;
+use web;
 
 CREATE TABLE scraps (
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 email VARCHAR(100) NOT NULL,
+guid VARCHAR(36) NOT NULL,
 created DATETIME NOT NULL,
 expires DATETIME NOT NULL
 );
@@ -12,23 +13,27 @@ expires DATETIME NOT NULL
 CREATE INDEX idx_snippets_created ON scraps(created);
 
 
-INSERT INTO scraps (email,created, expires) VALUES (
+INSERT INTO scraps (email,guid,created, expires) VALUES (
 'amitwpu@gmail.com',
+"qwertyuiop",
 UTC_TIMESTAMP(),
 DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
 );
 
-INSERT INTO scraps (email,created, expires) VALUES (
+INSERT INTO scraps (email,guid,created, expires) VALUES (
 'amitwpu2019@gmail.com',
+"qwasdfghj",
 UTC_TIMESTAMP(),
 DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
 );
 
 
-CREATE USER 'test'@'localhost';
+CREATE USER 'amit'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE ON snippetbox.* TO 'test'@'localhost';
+//GRANT SELECT, INSERT, UPDATE,ALTER ON web.* TO 'amit'@'localhost';
 
-ALTER USER 'test'@'localhost' IDENTIFIED BY 'pass';
+ALTER USER 'amit'@'localhost' IDENTIFIED BY 'pass';
 
-SELECT id, email, expires FROM scraps;-------------->testing
+SELECT id, email,guid, expires FROM scraps;-------------->testing
+
+

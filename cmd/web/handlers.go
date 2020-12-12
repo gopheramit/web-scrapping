@@ -70,9 +70,10 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	email := "abcd@gmail.com"
+	guid := "asdfghkl"
 	expires := "8"
 
-	id, err := app.scraps.Insert(email, expires)
+	id, err := app.scraps.Insert(email, guid, expires)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -122,7 +123,18 @@ func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) signup(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "keys.page.tmpl", nil)
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	email := r.PostForm.Get("email")
+	key := app.genUlid()
+	id, err := app.scraps.Insert(email, key, "30")
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+	//app.render(w, r, "keys.page.tmpl", nil)
 }
-
-
