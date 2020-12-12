@@ -19,8 +19,8 @@ func (app *application) routes() http.Handler {
 	mux.Get("/documentation", http.HandlerFunc(app.documentation))
 	mux.Get("/pricing", http.HandlerFunc(app.pricing))
 	mux.Get("/login", http.HandlerFunc(app.login))
-	mux.Get("/signup", http.HandlerFunc(app.signup))
-	mux.Post("/showkeys", http.HandlerFunc(app.showkey))
+	mux.Get("/signup", http.HandlerFunc(app.signupForm))
+	mux.Post("/signup", http.HandlerFunc(app.signup))
 
 	mux.Get("/scrap", http.HandlerFunc(app.showScrap))
 

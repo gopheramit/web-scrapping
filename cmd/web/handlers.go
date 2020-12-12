@@ -117,16 +117,12 @@ func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%v", s)
 }
 
-func (app *application) signup(w http.ResponseWriter, r *http.Request) {
+func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", nil)
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
 }
 
-func (app *application) showkey(w http.ResponseWriter, r *http.Request) {
+func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "keys.page.tmpl", nil)
-
 }
+
+
