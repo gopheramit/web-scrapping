@@ -52,8 +52,21 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
 }
+
+//func (app *application) createSignupForm(w http.ResponseWriter, r *http.Request) {
+//	app.render(w, r, "signup.page.tmpl"{
+// Pass a new empty forms.Form object to the template.
+//		Form: forms.New(nil),
+//	},)
+//}
 
 func (app *application) showkey(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "keys.page.tmpl")
+
 }

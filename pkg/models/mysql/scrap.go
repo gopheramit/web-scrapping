@@ -10,7 +10,7 @@ type ScrapModel struct {
 	DB *sql.DB
 }
 
-func (m *ScrapModel) Insert(email string) (int, error) {
+func (m *ScrapModel) Insert(email string, exires string) (int, error) {
 	return 0, nil
 }
 

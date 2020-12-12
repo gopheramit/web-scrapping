@@ -22,7 +22,7 @@ type application struct {
 func main() {
 
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	dsn := flag.String("dsn", "web:pass@/snippetbox?parseTime=true", "MySQL data source name")
+	dsn := flag.String("dsn", "test1:pass@/scrap?parseTime=true", "MySQL data source name")
 
 	flag.Parse()
 
@@ -32,17 +32,19 @@ func main() {
 	if err != nil {
 		errorLog.Fatal(err)
 	}
+
 	db, err := openDB(*dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
 
 	defer db.Close()
+
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
 		templateCache: templateCache,
-		//scraps & mysql.ScrapModel{DB: db},
+		scraps:        &mysql.ScrapModel{DB: db},
 	}
 
 	srv := &http.Server{

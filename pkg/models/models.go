@@ -2,11 +2,14 @@ package models
 
 import (
 	"errors"
+	"time"
 )
 
 var ErrNoRecord = errors.New("models: no matching record found")
 
 type Scrap struct {
-	ID    int
-	Emial string
+	ID      int
+	Emial   string
+	Created time.Time
+	Expires time.Time
 }
