@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strconv"
 	"strings"
@@ -56,6 +57,7 @@ func (app *application) documentation(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("begignig authorisation!")
 	gothic.BeginAuthHandler(w, r)
 }
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
@@ -64,14 +66,17 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login.page.tmpl", nil)
 }
 
-func (app *application) Auth(w http.ResponseWriter, r *http.Request) {
+func (app *application) auth(w http.ResponseWriter, r *http.Request) {
+
 	user, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
-		fmt.Fprintln(w, err)
+		fmt.Fprintln(w, r)
 		return
 	}
-	fmt.Println(user)
-	app.render(w, r, "sucess.page.tmpl", nil)
+	t, _ := template.ParseFiles("ui/html/success.html")
+	t.Execute(w, user)
+
+	//app.render(w, r, "sucess.page.tmpl", nil)
 }
 
 func (app *application) pricing(w http.ResponseWriter, r *http.Request) {

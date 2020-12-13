@@ -33,13 +33,27 @@ func (app *application) routes() http.Handler {
 		google.New("263741611747-2bgmmh2vnbjvt02c3m8s30ujbb76obgf.apps.googleusercontent.com", "DoN4QZCXaa3TJfr4BJZMQZNo", "http://localhost:4000/auth/google/callback", "email", "profile"),
 	)
 	mux := pat.New()
-	mux.Get("/auth/{provider}/callback", http.HandlerFunc(app.Auth))
-	mux.Get("/auth/{provider}", http.HandlerFunc(app.authbegin))
+
 	mux.Get("/", http.HandlerFunc(app.home))
 	mux.Get("/about", http.HandlerFunc(app.about))
 	mux.Get("/documentation", http.HandlerFunc(app.documentation))
 	mux.Get("/pricing", http.HandlerFunc(app.pricing))
 	mux.Get("/login", http.HandlerFunc(app.login))
+	mux.Get("auth/{provider}/callback", http.HandlerFunc(app.auth))
+	/*mux.Get("/auth/{provider}/callback", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user, err := gothic.CompleteUserAuth(w, r)
+		if err != nil {
+			fmt.Fprintln(w, r)
+			return
+		}
+		t, _ := template.ParseFiles("ui/html/success.html")
+		t.Execute(w, user)
+	}))*/
+
+	mux.Get("/auth/{provider}", http.HandlerFunc(app.authbegin))
+	/*mux.Get("/auth/google", http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		gothic.BeginAuthHandler(res, req)
+	}))*/
 	mux.Get("/signup", http.HandlerFunc(app.signupForm))
 	mux.Post("/signup", http.HandlerFunc(app.signup))
 
