@@ -9,6 +9,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/gopheramit/web-scrapping/pkg/models"
+	"github.com/markbates/goth/gothic"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -54,8 +55,23 @@ func (app *application) documentation(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Get started with web scrapping!"))
 }
 
+func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
+	gothic.BeginAuthHandler(w, r)
+}
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
+
+	//gothic.BeginAuthHandler(w, r)
 	app.render(w, r, "login.page.tmpl", nil)
+}
+
+func (app *application) Auth(w http.ResponseWriter, r *http.Request) {
+	user, err := gothic.CompleteUserAuth(w, r)
+	if err != nil {
+		fmt.Fprintln(w, err)
+		return
+	}
+	fmt.Println(user)
+	app.render(w, r, "sucess.page.tmpl", nil)
 }
 
 func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
