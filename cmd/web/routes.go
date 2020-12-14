@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"html/template"
 	"net/http"
+	"os"
 
-	"github.com/bmizerany/pat"
 	//"github.com/gorilla/pat"
+	"github.com/go-chi/chi"
 	"github.com/gorilla/sessions"
 	"github.com/justinas/alice"
 	"github.com/markbates/goth"
@@ -13,12 +16,19 @@ import (
 )
 
 //might need to change third party routing handler
+type myHandler struct {
+	// ...
+}
 
+func (h myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fileServer := http.FileServer(http.Dir("./assets/"))
+	http.StripPrefix("/assets/", fileServer)
+}
 func (app *application) routes() http.Handler {
 
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeader)
 	//mux := http.NewServeMux()
-	key := "DoN4QZCXaa3TJfr4BJZMQZNo" // Replace with your SESSION_SECRET or similar
+	key := "vlDxjmHJX80vOuHa5THxfCsR" // Replace with your SESSION_SECRET or similar
 	maxAge := 86400 * 30              // 30 days
 	isProd := false                   // Set to true when serving over https
 
@@ -29,18 +39,20 @@ func (app *application) routes() http.Handler {
 	store.Options.Secure = isProd
 
 	gothic.Store = store
-	goth.UseProviders(
-		google.New("263741611747-2bgmmh2vnbjvt02c3m8s30ujbb76obgf.apps.googleusercontent.com", "DoN4QZCXaa3TJfr4BJZMQZNo", "http://localhost:4000/auth/google/callback", "email", "profile"),
-	)
-	mux := pat.New()
+	goth.UseProviders(google.New(
+		os.Getenv("379756554270-olm9ma6g4dru3lil2cse84eaeimpj0u2.apps.googleusercontent.com"),
+		os.Getenv("vlDxjmHJX80vOuHa5THxfCsR"),
+		"http://localhost:4000/auth/callback?provider=google", "email", "profile"))
 
+	//mux := pat.New()
+	mux := chi.NewRouter()
 	mux.Get("/", http.HandlerFunc(app.home))
 	mux.Get("/about", http.HandlerFunc(app.about))
 	mux.Get("/documentation", http.HandlerFunc(app.documentation))
 	mux.Get("/pricing", http.HandlerFunc(app.pricing))
 	mux.Get("/login", http.HandlerFunc(app.login))
-	mux.Get("auth/{provider}/callback", http.HandlerFunc(app.auth))
-	/*mux.Get("/auth/{provider}/callback", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//mux.Get("auth/{provider}/callback", http.HandlerFunc(app.auth))
+	mux.Get("/auth/callback", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, err := gothic.CompleteUserAuth(w, r)
 		if err != nil {
 			fmt.Fprintln(w, r)
@@ -48,9 +60,9 @@ func (app *application) routes() http.Handler {
 		}
 		t, _ := template.ParseFiles("ui/html/success.html")
 		t.Execute(w, user)
-	}))*/
+	}))
 
-	mux.Get("/auth/{provider}", http.HandlerFunc(app.authbegin))
+	mux.Get("/auth", gothic.BeginAuthHandler)
 	/*mux.Get("/auth/google", http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		gothic.BeginAuthHandler(res, req)
 	}))*/
@@ -59,8 +71,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
 
-	fileServer := http.FileServer(http.Dir("./assets/"))
-	mux.Get("/assets/", (http.StripPrefix("/assets/", fileServer)))
+	//mux.Get("/assets/", http.Handle(myHandler))
 
 	return standardMiddleware.Then(mux)
 }
