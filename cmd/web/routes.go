@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
 	"strings"
 
 	//"github.com/gorilla/pat"
@@ -16,7 +15,7 @@ import (
 	"github.com/markbates/goth/providers/google"
 )
 
-//might need to change third party routing handler
+//might need to change third party routing handler(using chi now)
 
 func (app *application) routes() http.Handler {
 
@@ -34,11 +33,10 @@ func (app *application) routes() http.Handler {
 
 	gothic.Store = store
 	goth.UseProviders(google.New(
-		os.Getenv("379756554270-olm9ma6g4dru3lil2cse84eaeimpj0u2.apps.googleusercontent.com"),
-		os.Getenv("vlDxjmHJX80vOuHa5THxfCsR"),
+		"379756554270-olm9ma6g4dru3lil2cse84eaeimpj0u2.apps.googleusercontent.com",
+		"vlDxjmHJX80vOuHa5THxfCsR",
 		"http://localhost:4000/auth/callback?provider=google", "email", "profile"))
 
-	//mux := pat.New()
 	mux := chi.NewRouter()
 	mux.Get("/", http.HandlerFunc(app.home))
 	mux.Get("/about", http.HandlerFunc(app.about))
@@ -66,12 +64,6 @@ func (app *application) routes() http.Handler {
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
 	filesDir := http.Dir("./assets/")
 	FileServer(mux, "/assets", filesDir)
-
-	//fileServer := http.FileServer(http.Dir("./assets/"))
-	//http.StripPrefix("/assets/", fileServer)
-
-	//mux.Get("/assets/", http.Handle(myHandler))
-
 	return standardMiddleware.Then(mux)
 }
 
