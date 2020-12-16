@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"strings"
 
 	//"github.com/gorilla/pat"
 	"github.com/go-chi/chi"
@@ -16,14 +17,7 @@ import (
 )
 
 //might need to change third party routing handler
-type myHandler struct {
-	// ...
-}
 
-func (h myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fileServer := http.FileServer(http.Dir("./assets/"))
-	http.StripPrefix("/assets/", fileServer)
-}
 func (app *application) routes() http.Handler {
 
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeader)
@@ -70,8 +64,32 @@ func (app *application) routes() http.Handler {
 	mux.Post("/signup", http.HandlerFunc(app.signup))
 
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
+	filesDir := http.Dir("./assets/")
+	FileServer(mux, "/assets", filesDir)
+
+	//fileServer := http.FileServer(http.Dir("./assets/"))
+	//http.StripPrefix("/assets/", fileServer)
 
 	//mux.Get("/assets/", http.Handle(myHandler))
 
 	return standardMiddleware.Then(mux)
+}
+
+func FileServer(r chi.Router, path string, root http.FileSystem) {
+	if strings.ContainsAny(path, "{}*") {
+		panic("FileServer does not permit any URL parameters.")
+	}
+
+	if path != "/" && path[len(path)-1] != '/' {
+		r.Get(path, http.RedirectHandler(path+"/", 301).ServeHTTP)
+		path += "/"
+	}
+	path += "*"
+
+	r.Get(path, func(w http.ResponseWriter, r *http.Request) {
+		rctx := chi.RouteContext(r.Context())
+		pathPrefix := strings.TrimSuffix(rctx.RoutePattern(), "/*")
+		fs := http.StripPrefix(pathPrefix, http.FileServer(root))
+		fs.ServeHTTP(w, r)
+	})
 }
