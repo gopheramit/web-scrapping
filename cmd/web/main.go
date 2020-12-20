@@ -10,6 +10,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
+	"github.com/gorilla/sessions"
 )
 
 type application struct {
@@ -17,6 +18,7 @@ type application struct {
 	infoLog       *log.Logger
 	templateCache map[string]*template.Template
 	scraps        *mysql.ScrapModel
+	session       *sessions.Session
 }
 
 func main() {

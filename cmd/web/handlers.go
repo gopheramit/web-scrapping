@@ -56,24 +56,6 @@ func (app *application) documentation(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Get started with web scrapping!"))
 }
 
-func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("begignig authorisation!")
-	gothic.BeginAuthHandler(w, r)
-}
-func (app *application) login(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login.page.tmpl", nil)
-}
-
-func (app *application) auth(w http.ResponseWriter, r *http.Request) {
-	user, err := gothic.CompleteUserAuth(w, r)
-	if err != nil {
-		fmt.Fprintln(w, r)
-		return
-	}
-	t, _ := template.ParseFiles("ui/html/success.html")
-	t.Execute(w, user)
-}
-
 func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "pricing.page.tmpl", nil)
 	//w.Write([]byte("About pricing!"))
@@ -126,6 +108,26 @@ func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "%v", s)
 }
 
+func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("begignig authorisation!")
+	gothic.BeginAuthHandler(w, r)
+}
+func (app *application) auth(w http.ResponseWriter, r *http.Request) {
+	user, err := gothic.CompleteUserAuth(w, r)
+	if err != nil {
+		fmt.Fprintln(w, r)
+		return
+	}
+	t, _ := template.ParseFiles("ui/html/success.html")
+	t.Execute(w, user)
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+func (app *application) login(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "login.page.tmpl", nil)
+}
+
 func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", nil)
 }
@@ -160,4 +162,20 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 	//	app.render(w, r, "keys.page.tmpl", nil)
+}
+
+func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Display the user signup form...")
+}
+func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Create a new user...")
+}
+func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Display the user login form...")
+}
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Authenticate and login the user...")
+}
+func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Logout the user...")
 }
