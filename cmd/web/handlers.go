@@ -61,13 +61,10 @@ func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
 	gothic.BeginAuthHandler(w, r)
 }
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
-
-	//gothic.BeginAuthHandler(w, r)
 	app.render(w, r, "login.page.tmpl", nil)
 }
 
 func (app *application) auth(w http.ResponseWriter, r *http.Request) {
-
 	user, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
 		fmt.Fprintln(w, r)
@@ -75,8 +72,6 @@ func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 	}
 	t, _ := template.ParseFiles("ui/html/success.html")
 	t.Execute(w, user)
-
-	//app.render(w, r, "sucess.page.tmpl", nil)
 }
 
 func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
