@@ -2,7 +2,7 @@
 {{define "title"}}Signup Page{{end}}
 {{define "main"}}
 
-<form action='/signup' method='POST'>
+<form action='/user/signup' method='POST'>
 
 <div class="container">
     <div class="jumbotron text-center text-success">
@@ -15,12 +15,10 @@
 <label>Email:</label>
 <input type='text' name='email'>
 </div>
-
 <div>
 <label>Password:</label>
 <input type='text' name='password'>
 </div>
-
 <div>
 <input type='submit' value='Submit Email!'>
 </div>

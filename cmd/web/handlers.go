@@ -9,6 +9,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/markbates/goth/gothic"
 )
@@ -165,10 +166,40 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display the user signup form...")
+	app.render(w, r, "signup.page.tmpl", nil)
 }
 func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Create a new user...")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	// Validate the form contents using the form helper we made earlier.
+	form := forms.New(r.PostForm)
+	form.Required("name", "email", "password")
+	form.MaxLength("name", 255)
+	form.MaxLength("email", 255)
+	form.MatchesPattern("email", forms.EmailRX)
+	form.MinLength("password", 10)
+	// If there are any errors, redisplay the signup form.
+	if !form.Valid() {
+		app.render(w, r, "signup.page.tmpl", nil)
+		return
+	}
+	err = app.users.Insert(form.Get("name"), form.Get("email"), form.Get("password"))
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			form.Errors.Add("email", "Address is already in use")
+			app.render(w, r, "signup.page.tmpl", nil)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+	// Otherwise send a placeholder response (for now!).
+	app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+
 }
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Display the user login form...")
