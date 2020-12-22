@@ -7,10 +7,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
-	"github.com/gorilla/sessions"
+
+	//"github.com/gorilla/sessions"
+	"github.com/golangcollege/sessions"
 )
 
 type application struct {
@@ -25,7 +28,7 @@ func main() {
 
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	dsn := flag.String("dsn", "amit:pass@/web?parseTime=true", "MySQL data source name")
-
+	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
 	flag.Parse()
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
@@ -39,14 +42,17 @@ func main() {
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-
 	defer db.Close()
+
+	session := sessions.New([]byte(*secret))
+	session.Lifetime = 12 * time.Hour
 
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
 		templateCache: templateCache,
 		scraps:        &mysql.ScrapModel{DB: db},
+		session:       session,
 	}
 
 	srv := &http.Server{
