@@ -59,7 +59,7 @@ func (f *Form) MaxLength(field string, d int) {
 	if utf8.RuneCountInString(value) > d {
 		f.Errors.Add(field, fmt.Sprintf("This field is too long (maximum is %d characters)", d))
 	}
-}
+}  
 
 func (f *Form) PermittedValues(field string, opts ...string) {
 	value := f.Get(field)
