@@ -44,11 +44,11 @@ func (app *application) routes() http.Handler {
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
 
 	mux.Get("/user/signup", http.HandlerFunc(app.signupUserForm))
-	mux.Post("/user/signup", http.HandlerFunc(app.signupUser))
+	//mux.Post("/user/signup", http.HandlerFunc(app.signupUser))
 	mux.Get("/user/login", http.HandlerFunc(app.loginUserForm))
 	mux.Post("/user/login", http.HandlerFunc(app.loginUser))
 	mux.Post("/user/logout", http.HandlerFunc(app.logoutUser))
-	
+
 	filesDir := http.Dir("./assets/")
 	FileServer(mux, "/assets", filesDir)
 	return standardMiddleware.Then(mux)
