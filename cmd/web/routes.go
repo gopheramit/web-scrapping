@@ -40,11 +40,11 @@ func (app *application) routes() http.Handler {
 	mux.Get("/auth/callback", http.HandlerFunc(app.auth))
 	mux.Get("/auth", gothic.BeginAuthHandler)
 	mux.Get("/signup", http.HandlerFunc(app.signupUserForm))
-	mux.Post("/signup", http.HandlerFunc(app.signup))
+	//mux.Post("/signup", http.HandlerFunc(app.signup))
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
 
 	mux.Get("/user/signup", http.HandlerFunc(app.signupUserForm))
-	//mux.Post("/user/signup", http.HandlerFunc(app.signupUser))
+	mux.Post("/user/signup", http.HandlerFunc(app.signupUser))
 	mux.Get("/user/login", http.HandlerFunc(app.loginUserForm))
 	mux.Post("/user/login", http.HandlerFunc(app.loginUser))
 	mux.Post("/user/logout", http.HandlerFunc(app.logoutUser))
