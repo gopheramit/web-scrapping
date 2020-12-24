@@ -188,7 +188,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("amit")
-	err = app.users.Insert("amit", form.Get("email"), form.Get("password"))
+	err = app.users.Insert(form.Get("email"), form.Get("password"))
 
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateEmail) {
