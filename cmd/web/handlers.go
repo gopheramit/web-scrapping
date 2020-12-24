@@ -176,7 +176,6 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	}
 	form := forms.New(r.PostForm)
 	fmt.Println(form.Get("email"))
-
 	form.Required("email", "password")
 	form.MaxLength("email", 255)
 	form.MatchesPattern("email", forms.EmailRX)
@@ -189,16 +188,18 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("amit")
-	//err = app.users.Insert(form.Get("email"), form.Get("password"))
-	//if err != nil {
-	//	if errors.Is(err, models.ErrDuplicateEmail) {
-	//		form.Errors.Add("email", "Address is already in use")
-	//		app.render(w, r, "signup.page.tmpl", nil)
-	//	} else {
-	//		app.serverError(w, err)
-	//	}
-	//	return
-	//}
+	err = app.users.Insert("amit", form.Get("email"), form.Get("password"))
+
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			form.Errors.Add("email", "Address is already in use")
+			app.render(w, r, "signup.page.tmpl", nil)
+		} else {
+
+			app.serverError(w, err)
+		}
+		return
+	}
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
