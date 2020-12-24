@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 	"time"
-
+	
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
 

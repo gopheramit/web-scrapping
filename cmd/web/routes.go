@@ -39,7 +39,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/login", http.HandlerFunc(app.login))
 	mux.Get("/auth/callback", http.HandlerFunc(app.auth))
 	mux.Get("/auth", gothic.BeginAuthHandler)
-	mux.Get("/signup", http.HandlerFunc(app.signupForm))
+	mux.Get("/signup", http.HandlerFunc(app.signupUserForm))
 	mux.Post("/signup", http.HandlerFunc(app.signup))
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
 
@@ -48,6 +48,10 @@ func (app *application) routes() http.Handler {
 	mux.Get("/user/login", http.HandlerFunc(app.loginUserForm))
 	mux.Post("/user/login", http.HandlerFunc(app.loginUser))
 	mux.Post("/user/logout", http.HandlerFunc(app.logoutUser))
+
+	mux.Get("/snippet/create", http.HandlerFunc(app.createSnippetForm))
+
+	mux.Post("/snippet/create", http.HandlerFunc(app.createSnippet))
 
 	filesDir := http.Dir("./assets/")
 	FileServer(mux, "/assets", filesDir)
