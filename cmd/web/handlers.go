@@ -124,7 +124,7 @@ func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login.page.tmpl", nil)
+	app.render(w, r, "login1.page.tmpl", nil)
 }
 
 //func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
@@ -207,7 +207,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login.page.tmpl", &templateData{
+	app.render(w, r, "login1.page.tmpl", &templateData{
 		Form: forms.New(nil),
 	})
 }
