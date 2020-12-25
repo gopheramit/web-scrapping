@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
@@ -127,11 +129,11 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login1.page.tmpl", nil)
 }
 
-//func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
-//	app.render(w, r, "signup.page.tmpl", nil)
-//}
-/*
-func (app *application) signup(w http.ResponseWriter, r *http.Request) {
+func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "signup1.page.tmpl", nil)
+}
+
+func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
@@ -146,7 +148,7 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		errors["email"] = "This field is too long (maximum is 100 characters)"
 	}
 	if len(errors) > 0 {
-		app.render(w, r, "signup.page.tmpl", nil)
+		app.render(w, r, "signup1.page.tmpl", nil)
 		return
 	}
 	key := app.genUlid()
@@ -159,7 +161,6 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 	//	app.render(w, r, "keys.page.tmpl", nil)
 }
-8*/
 
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", &templateData{
@@ -234,7 +235,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// in'.
 	fmt.Println(id)
 	// Redirect the user to the create snippet page.
-	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+	http.Redirect(w, r, "/scrap/:id", http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 
