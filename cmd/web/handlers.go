@@ -6,8 +6,6 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"strings"
-	"unicode/utf8"
 
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
@@ -63,6 +61,7 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 
 }
 
+/*
 func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -79,7 +78,7 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
-}
+}*/
 
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
@@ -130,7 +129,10 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "signup1.page.tmpl", nil)
+	fmt.Println("ggigylg")
+	app.render(w, r, "signup.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
 }
 
 func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
@@ -139,26 +141,36 @@ func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	errors := make(map[string]string)
-	email := r.PostForm.Get("email")
-	fmt.Println(email)
-	if strings.TrimSpace(email) == "" {
-		errors["email"] = "This field cannot be blank"
-	} else if utf8.RuneCountInString(email) > 100 {
-		errors["email"] = "This field is too long (maximum is 100 characters)"
-	}
-	if len(errors) > 0 {
-		app.render(w, r, "signup1.page.tmpl", nil)
+	form := forms.New(r.PostForm)
+	fmt.Println(form.Get("email"))
+	form.Required("email", "password")
+	form.MaxLength("email", 255)
+	form.MatchesPattern("email", forms.EmailRX)
+	form.MinLength("password", 2)
+	if !form.Valid() {
+		app.render(w, r, "signup.page.tmpl", &templateData{
+			Form: forms.New(nil),
+		})
 		return
 	}
+
 	key := app.genUlid()
 	keystr := key.String()
-	id, err := app.scraps.Insert(email, keystr, "30")
+	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, "30")
 	if err != nil {
-		app.serverError(w, err)
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			form.Errors.Add("email", "Address is already in use")
+			app.render(w, r, "signup.page.tmpl", nil)
+		} else {
+
+			app.serverError(w, err)
+		}
 		return
 	}
-	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+	fmt.Println(id)
+	app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+	//http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 	//	app.render(w, r, "keys.page.tmpl", nil)
 }
 
@@ -188,7 +200,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	fmt.Println("amit")
+	//fmt.Println("amit")
 	err = app.users.Insert(form.Get("email"), form.Get("password"))
 
 	if err != nil {
