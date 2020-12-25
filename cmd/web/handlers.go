@@ -83,9 +83,9 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
-	//	var=r.URL.Query().Get("id")
-	//	fmt.Println(var)
-	//fmt.Println(id)
+	//var12 := r.URL.Query().Get("id")
+	//fmt.Println(var12)
+	fmt.Println("urlid is", id)
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
@@ -214,6 +214,7 @@ func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 }
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	fmt.Println("amit")
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
@@ -235,7 +236,8 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// in'.
 	fmt.Println(id)
 	// Redirect the user to the create snippet page.
-	http.Redirect(w, r, "/scrap/:id", http.StatusSeeOther)
+	//http.Redirect(w, r, "/scrap/:id", http.StatusSeeOther)
+	http.Redirect(w, r, "/scrap/5", http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 
