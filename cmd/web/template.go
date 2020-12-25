@@ -13,6 +13,7 @@ type templateData struct {
 	CurrentYear int
 	Scrap       *models.Scrap
 	Scraps      []*models.Scrap
+	Flash       string
 	Form        *forms.Form
 }
 

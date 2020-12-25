@@ -201,7 +201,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Otherwise send a placeholder response (for now!).
-	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+	app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 
 }
