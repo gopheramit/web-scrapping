@@ -130,7 +130,7 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("ggigylg")
-	app.render(w, r, "signup.page.tmpl", &templateData{
+	app.render(w, r, "signup1.page.tmpl", &templateData{
 		Form: forms.New(nil),
 	})
 }

@@ -43,8 +43,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/auth/callback", dynamicMiddleware.ThenFunc(app.auth))
 	mux.Get("/auth", dynamicMiddleware.ThenFunc(gothic.BeginAuthHandler))
 	mux.Get("signup1", dynamicMiddleware.ThenFunc(app.signupForm))
-	mux.Get("/user/signup1", http.HandlerFunc(app.signup1))
-	mux.Post("/user/signup1", http.HandlerFunc(app.signup1))
+	mux.Post("signup1", http.HandlerFunc(app.signup1))
 	mux.Get("/scrap/:id", dynamicMiddleware.ThenFunc(app.showScrap))
 
 	mux.Get("/user/signup", dynamicMiddleware.ThenFunc(app.signupUserForm))
@@ -59,8 +58,8 @@ func (app *application) routes() http.Handler {
 
 	//filesDir := http.Dir("./assets/")
 	//FileServer(mux, "/assets", filesDir)
-	fileServer := http.FileServer(http.Dir("./ui/static/"))
-	mux.Get("/static/", http.StripPrefix("/static", fileServer))
+	fileServer := http.FileServer(http.Dir("./assets"))
+	mux.Get("/assets/", http.StripPrefix("/assets", fileServer))
 	return standardMiddleware.Then(mux)
 }
 
