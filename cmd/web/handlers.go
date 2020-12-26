@@ -24,13 +24,11 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		"./ui/html/base.layout.tmpl",
 		"./ui/html/footer.partial.tmpl",
 	}
-
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
-
 	err = ts.Execute(w, data)
 	if err != nil {
 		app.serverError(w, err)
@@ -61,7 +59,6 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*
 func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -72,19 +69,19 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	guid := "asdfghkl"
 	expires := "8"
 
-	id, err := app.scraps.Insert(email, guid, expires)
+	id, err := app.scraps.Insert(email, "amit", guid, expires)
 	if err != nil {
 		app.serverError(w, err)
 		return
 	}
 	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
-}*/
+}
 
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
-	//var12 := r.URL.Query().Get("id")
-	//fmt.Println(var12)
-	fmt.Println("urlid is", id)
+	//	var=r.URL.Query().Get("id")
+	//	fmt.Println(var)
+	//fmt.Println(id)
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
@@ -128,36 +125,16 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login1.page.tmpl", nil)
 }
 
-func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("ggigylg")
-	app.render(w, r, "signup1.page.tmpl", &templateData{
-		Form: forms.New(nil),
-	})
-}
-
-func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
-
 //func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
 //	app.render(w, r, "signup.page.tmpl", nil)
 //}
 /*
 func (app *application) signup(w http.ResponseWriter, r *http.Request) {
->>>>>>> parent of 38b5f21... fixing earlier signup  issue in navigation
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-	form := forms.New(r.PostForm)
-	fmt.Println(form.Get("email"))
-	form.Required("email", "password")
-	form.MaxLength("email", 255)
-	form.MatchesPattern("email", forms.EmailRX)
-	form.MinLength("password", 2)
-	if !form.Valid() {
-		app.render(w, r, "signup.page.tmpl", &templateData{
-			Form: forms.New(nil),
-		})
 	errors := make(map[string]string)
 	email := r.PostForm.Get("email")
 	fmt.Println(email)
@@ -170,24 +147,14 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, "signup.page.tmpl", nil)
 		return
 	}
-
 	key := app.genUlid()
 	keystr := key.String()
-	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, "30")
+	id, err := app.scraps.Insert(email, keystr, "30")
 	if err != nil {
-		if errors.Is(err, models.ErrDuplicateEmail) {
-			form.Errors.Add("email", "Address is already in use")
-			app.render(w, r, "signup.page.tmpl", nil)
-		} else {
-
-			app.serverError(w, err)
-		}
+		app.serverError(w, err)
 		return
 	}
-	fmt.Println(id)
-	app.session.Put(r, "flash", "Your signup was successful. Please log in.")
-	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
-	//http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 	//	app.render(w, r, "keys.page.tmpl", nil)
 }
 8*/
@@ -195,7 +162,7 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", &templateData{
 		// Pass a new empty forms.Form object to the template.
-		Form: forms.New(nil)
+		Form: forms.New(nil),
 	})
 }
 
@@ -218,7 +185,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	//fmt.Println("amit")
+	fmt.Println("amit")
 	err = app.users.Insert(form.Get("email"), form.Get("password"))
 
 	if err != nil {
@@ -232,19 +199,18 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Otherwise send a placeholder response (for now!).
-	app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login.page.tmpl", &templateData{
+	app.render(w, r, "login1.page.tmpl", &templateData{
 		Form: forms.New(nil),
 	})
 }
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
-	fmt.Println("amit")
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
@@ -266,23 +232,10 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// in'.
 	fmt.Println(id)
 	// Redirect the user to the create snippet page.
-<<<<<<< HEAD
-	//http.Redirect(w, r, "/scrap/:id", http.StatusSeeOther)
-	http.Redirect(w, r, "/scrap/5", http.StatusSeeOther)
-=======
 	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
->>>>>>> parent of 38b5f21... fixing earlier signup  issue in navigation
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
-
-	// Remove the authenticatedUserID from the session data so that the user is
-	// 'logged out'.
-	app.session.Remove(r, "authenticatedUserID")
-	// Add a flash message to the session to confirm to the user that they've been
-	// logged out.
-	app.session.Put(r, "flash", "You've been logged out successfully!")
-	http.Redirect(w, r, "/", http.StatusSeeOther)
-
+	fmt.Fprintln(w, "Logout the user...")
 }
 
 func (app *application) createSnippetForm(w http.ResponseWriter, r *http.Request) {
