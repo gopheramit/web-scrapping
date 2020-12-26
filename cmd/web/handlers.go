@@ -201,7 +201,8 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// in'.
 	fmt.Println(id)
 	// Redirect the user to the create snippet page.
-	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+	//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Logout the user...")
