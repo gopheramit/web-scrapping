@@ -1,6 +1,12 @@
 {{template "base" .}}
 {{define "title"}}Login{{end}}
 {{define "main"}}
+
+<div class="container">
+    <div class="jumbotron text-center text-success">
+        <a href="/auth?provider=google" class="btn btn-danger"><span class="fa fa-google"></span> Login with Google</a>
+    </div>
+</div>
 <form action='/user/login' method='POST' novalidate>
 {{with .Form}}
 {{with .Errors.Get "generic"}}

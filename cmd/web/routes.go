@@ -39,7 +39,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/about", dynamicMiddleware.ThenFunc(app.about))
 	mux.Get("/documentation", dynamicMiddleware.ThenFunc(app.documentation))
 	mux.Get("/pricing", dynamicMiddleware.ThenFunc(app.pricing))
-	mux.Get("/login", dynamicMiddleware.ThenFunc(app.login))
+	//mux.Get("/login", dynamicMiddleware.ThenFunc(app.login))
 	mux.Get("/auth/callback", dynamicMiddleware.ThenFunc(app.auth))
 	mux.Get("/auth", dynamicMiddleware.ThenFunc(gothic.BeginAuthHandler))
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
