@@ -136,11 +136,19 @@ func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
+
+//func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
+//	app.render(w, r, "signup.page.tmpl", nil)
+//}
+/*
+func (app *application) signup(w http.ResponseWriter, r *http.Request) {
+>>>>>>> parent of 38b5f21... fixing earlier signup  issue in navigation
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
+<<<<<<< HEAD
 	form := forms.New(r.PostForm)
 	fmt.Println(form.Get("email"))
 	form.Required("email", "password")
@@ -151,6 +159,18 @@ func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, "signup.page.tmpl", &templateData{
 			Form: forms.New(nil),
 		})
+=======
+	errors := make(map[string]string)
+	email := r.PostForm.Get("email")
+	fmt.Println(email)
+	if strings.TrimSpace(email) == "" {
+		errors["email"] = "This field cannot be blank"
+	} else if utf8.RuneCountInString(email) > 100 {
+		errors["email"] = "This field is too long (maximum is 100 characters)"
+	}
+	if len(errors) > 0 {
+		app.render(w, r, "signup.page.tmpl", nil)
+>>>>>>> parent of 38b5f21... fixing earlier signup  issue in navigation
 		return
 	}
 
@@ -173,11 +193,12 @@ func (app *application) signup1(w http.ResponseWriter, r *http.Request) {
 	//http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 	//	app.render(w, r, "keys.page.tmpl", nil)
 }
+8*/
 
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", &templateData{
 		// Pass a new empty forms.Form object to the template.
-		Form: forms.New(nil),
+		Form: forms.New(nil)
 	})
 }
 
@@ -248,8 +269,12 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// in'.
 	fmt.Println(id)
 	// Redirect the user to the create snippet page.
+<<<<<<< HEAD
 	//http.Redirect(w, r, "/scrap/:id", http.StatusSeeOther)
 	http.Redirect(w, r, "/scrap/5", http.StatusSeeOther)
+=======
+	http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+>>>>>>> parent of 38b5f21... fixing earlier signup  issue in navigation
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 
