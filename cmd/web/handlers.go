@@ -160,7 +160,7 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 8*/
 
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "signup.page.tmpl", &templateData{
+	app.render(w, r, "signup1.page.tmpl", &templateData{
 		// Pass a new empty forms.Form object to the template.
 		Form: forms.New(nil),
 	})
