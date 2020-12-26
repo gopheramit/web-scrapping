@@ -148,7 +148,6 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-<<<<<<< HEAD
 	form := forms.New(r.PostForm)
 	fmt.Println(form.Get("email"))
 	form.Required("email", "password")
@@ -159,7 +158,6 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, "signup.page.tmpl", &templateData{
 			Form: forms.New(nil),
 		})
-=======
 	errors := make(map[string]string)
 	email := r.PostForm.Get("email")
 	fmt.Println(email)
@@ -170,7 +168,6 @@ func (app *application) signup(w http.ResponseWriter, r *http.Request) {
 	}
 	if len(errors) > 0 {
 		app.render(w, r, "signup.page.tmpl", nil)
->>>>>>> parent of 38b5f21... fixing earlier signup  issue in navigation
 		return
 	}
 
