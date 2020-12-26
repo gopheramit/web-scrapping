@@ -200,6 +200,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// Add the ID of the current user to the session, so that they are now 'logged
 	// in'.
 	fmt.Println(id)
+	app.session.Put(r, "authenticatedUserID", id)
 	// Redirect the user to the create snippet page.
 	//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
 	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
@@ -210,31 +211,4 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 
 	app.session.Put(r, "flash", "You've been logged out successfully!")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
-}
-
-func (app *application) createSnippetForm(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "create.page.tmpl", &templateData{
-		// Pass a new empty forms.Form object to the template.
-		Form: forms.New(nil),
-	})
-}
-func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	// Create a new forms.Form struct containing the POSTed data from the
-	// form, then use the validation methods to check the content.
-	form := forms.New(r.PostForm)
-	form.Required("title", "content", "expires")
-	form.MaxLength("title", 100)
-	form.PermittedValues("expires", "365", "7", "1")
-	// If the form isn't valid, redisplay the template passing in the
-	// form.Form object as the data.
-	if !form.Valid() {
-		app.render(w, r, "create.page.tmpl", &templateData{Form: form})
-		return
-	}
-	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 }
