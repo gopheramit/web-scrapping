@@ -125,40 +125,6 @@ func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login1.page.tmpl", nil)
 }
 
-//func (app *application) signupForm(w http.ResponseWriter, r *http.Request) {
-//	app.render(w, r, "signup.page.tmpl", nil)
-//}
-/*
-func (app *application) signup(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-	errors := make(map[string]string)
-	email := r.PostForm.Get("email")
-	fmt.Println(email)
-	if strings.TrimSpace(email) == "" {
-		errors["email"] = "This field cannot be blank"
-	} else if utf8.RuneCountInString(email) > 100 {
-		errors["email"] = "This field is too long (maximum is 100 characters)"
-	}
-	if len(errors) > 0 {
-		app.render(w, r, "signup.page.tmpl", nil)
-		return
-	}
-	key := app.genUlid()
-	keystr := key.String()
-	id, err := app.scraps.Insert(email, keystr, "30")
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
-	//	app.render(w, r, "keys.page.tmpl", nil)
-}
-8*/
-
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup1.page.tmpl", &templateData{
 		// Pass a new empty forms.Form object to the template.
@@ -186,8 +152,10 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("amit")
-	err = app.users.Insert(form.Get("email"), form.Get("password"))
-
+	key := app.genUlid()
+	keystr := key.String()
+	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, "30")
+	//rr = app.users.Insert(form.Get("email"), form.Get("password"))
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateEmail) {
 			form.Errors.Add("email", "Address is already in use")
@@ -198,6 +166,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	fmt.Println(id)
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)

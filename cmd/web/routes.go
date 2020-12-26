@@ -42,8 +42,6 @@ func (app *application) routes() http.Handler {
 	mux.Get("/login", dynamicMiddleware.ThenFunc(app.login))
 	mux.Get("/auth/callback", dynamicMiddleware.ThenFunc(app.auth))
 	mux.Get("/auth", dynamicMiddleware.ThenFunc(gothic.BeginAuthHandler))
-	mux.Get("/signup", http.HandlerFunc(app.signupUserForm))
-	//mux.Post("/signup", http.HandlerFunc(app.signup))
 	mux.Get("/scrap/:id", http.HandlerFunc(app.showScrap))
 
 	mux.Get("/user/signup", dynamicMiddleware.ThenFunc(app.signupUserForm))
