@@ -55,3 +55,6 @@ ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
 
 ALTER TABLE scraps
 ADD COLUMN hashed_password CHAR(60) NOT NULL AFTER email;
+
+ALTER TABLE scraps
+ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE AFTER expires;
