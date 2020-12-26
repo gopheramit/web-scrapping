@@ -179,7 +179,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	form.MatchesPattern("email", forms.EmailRX)
 	form.MinLength("password", 2)
 	if !form.Valid() {
-		app.render(w, r, "signup.page.tmpl", &templateData{
+		app.render(w, r, "signup1.page.tmpl", &templateData{
 			// Pass a new empty forms.Form object to the template.
 			Form: forms.New(nil),
 		})
@@ -191,7 +191,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateEmail) {
 			form.Errors.Add("email", "Address is already in use")
-			app.render(w, r, "signup.page.tmpl", nil)
+			app.render(w, r, "signup1.page.tmpl", nil)
 		} else {
 
 			app.serverError(w, err)
