@@ -54,7 +54,9 @@ func (app *application) documentation(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "pricing.page.tmpl", nil)
+	app.render(w, r, "pricing.page.tmpl", &templateData{
+		//Scrap: s,
+	})
 	//w.Write([]byte("About pricing!"))
 
 }
@@ -206,9 +208,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
-
 	app.session.Remove(r, "authenticatedUserID")
-
 	app.session.Put(r, "flash", "You've been logged out successfully!")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
