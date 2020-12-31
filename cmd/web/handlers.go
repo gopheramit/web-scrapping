@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/markbates/goth/gothic"
@@ -211,4 +213,20 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	app.session.Remove(r, "authenticatedUserID")
 	app.session.Put(r, "flash", "You've been logged out successfully!")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
+	doc, err := goquery.NewDocument("http://jonathanmh.com")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// use CSS selector found with the browser inspector
+	// for each, use index and item
+	doc.Find("body a").Each(func(index int, item *goquery.Selection) {
+		linkTag := item
+		link, _ := linkTag.Attr("href")
+		linkText := linkTag.Text()
+		fmt.Printf("Link #%d: '%s' - '%s'\n", index, linkText, link)
+	})
 }
