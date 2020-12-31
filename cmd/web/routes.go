@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/bmizerany/pat"
+	"github.com/gorilla/sessions"
 
 	//"github.com/go-chi/chi"
 
@@ -19,15 +20,15 @@ func (app *application) routes() http.Handler {
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeader)
 	dynamicMiddleware := alice.New(app.session.Enable) //noSurf)
 	//mux := http.NewServeMux()
-	//key := "vlDxjmHJX80vOuHa5THxfCsR" // Replace with your SESSION_SECRET or similar
-	//maxAge := 86400 * 30              // 30 days
-	//isProd := false                   // Set to true when serving over https
-	//store := sessions.NewCookieStore([]byte(key))
-	//store.MaxAge(maxAge)
-	//store.Options.Path = "/"
-	//store.Options.HttpOnly = true // HttpOnly should always be enabled
-	//store.Options.Secure = isProd
-	//gothic.Store = store
+	key1 := "vlDxjmHJX80vOuHa5THxfCsR" // Replace with your SESSION_SECRET or similar
+	maxAge := 86400 * 30               // 30 days
+	isProd := false                    // Set to true when serving over https
+	store := sessions.NewCookieStore([]byte(key1))
+	store.MaxAge(maxAge)
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.Secure = isProd
+	gothic.Store = store
 	goth.UseProviders(google.New(
 		"379756554270-olm9ma6g4dru3lil2cse84eaeimpj0u2.apps.googleusercontent.com",
 		"vlDxjmHJX80vOuHa5THxfCsR",
