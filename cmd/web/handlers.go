@@ -216,6 +216,21 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
+
+	key := (r.URL.Query().Get(":key"))
+
+	s, err := app.scraps.GetKey(key)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+
+		return
+	}
+	fmt.Println("s:::::::::::", s)
+
 	doc, err := goquery.NewDocument("http://jonathanmh.com")
 	if err != nil {
 		log.Fatal(err)
