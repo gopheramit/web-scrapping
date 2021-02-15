@@ -59,17 +59,33 @@
         <a class="nav-link" href="/pricing">Pricing</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/login">Login</a>
+        <a class="nav-link" href="/user/login">Login</a>
       </li>
     </ul>
   </div>
+  <div>
+  <div>
+<div>
+<!-- Toggle the navigation links -->
+
+<div>
+<!-- Toggle the navigation links -->
+
+<form action='/user/logout' method='POST'>
+<button>Logout</button>
+</form>
+
+<a href='/user/signup'>Signup</a>
+<a href='/user/login'>Login</a>
+
+</div>
 </nav>
 
 <main role="main" class="container">
   <div class="jumbotron">
     <h1>Navbar example</h1>
     <p class="lead">A website for web scrapping</p>
-    <a class="btn btn-lg btn-primary" href="/signup" role="button">Signup for free</a>
+    <a class="btn btn-lg btn-primary" href="/user/signup" role="button">Signup for free</a>
   </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

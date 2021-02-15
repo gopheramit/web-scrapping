@@ -1,10 +1,13 @@
-CREATE DATABASE scrap CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE web CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-use scrap;
+
+
+
 
 CREATE TABLE scraps (
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 email VARCHAR(100) NOT NULL,
+guid VARCHAR(36) NOT NULL,
 created DATETIME NOT NULL,
 expires DATETIME NOT NULL
 );
@@ -12,23 +15,54 @@ expires DATETIME NOT NULL
 CREATE INDEX idx_snippets_created ON scraps(created);
 
 
-INSERT INTO scraps (email,created, expires) VALUES (
+INSERT INTO scraps (email,guid,created, expires) VALUES (
 'amitwpu@gmail.com',
+"qwertyuiop",
 UTC_TIMESTAMP(),
 DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
 );
 
-INSERT INTO scraps (email,created, expires) VALUES (
+INSERT INTO scraps (email,guid,created, expires) VALUES (
 'amitwpu2019@gmail.com',
+"qwasdfghj",
 UTC_TIMESTAMP(),
 DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
 );
 
 
-CREATE USER 'test'@'localhost';
+CREATE USER 'amit'@'localhost';
 
-GRANT SELECT, INSERT, UPDATE ON snippetbox.* TO 'test'@'localhost';
+//GRANT SELECT, INSERT, UPDATE,ALTER ON web.* TO 'amit'@'localhost';
 
-ALTER USER 'test'@'localhost' IDENTIFIED BY 'pass';
+ALTER USER 'amit'@'localhost' IDENTIFIED BY 'pass';
 
-SELECT id, email, expires FROM scraps;-------------->testing
+SELECT id, email,guid, expires FROM scraps;-------------->testing
+
+379756554270-olm9ma6g4dru3lil2cse84eaeimpj0u2.apps.googleusercontent.com
+
+
+Creating psudo user model
+
+CREATE TABLE users (
+id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+email VARCHAR(255) NOT NULL,
+hashed_password CHAR(60) NOT NULL,
+created DATETIME NOT NULL,
+active BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
+
+ALTER TABLE scraps
+ADD COLUMN hashed_password CHAR(60) NOT NULL AFTER email;
+
+ALTER TABLE scraps
+ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE AFTER expires;
+
+################################
+## mysql -D web -u amit -p    ##
+##                            ##
+## select *from scraps;       ##
+##                            ##
+## 01EYHXEXG64V0JJGAEM0GJAK3P ##
+################################

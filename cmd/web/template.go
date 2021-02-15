@@ -4,13 +4,19 @@ import (
 	"html/template"
 	"path/filepath"
 
+	"github.com/gopheramit/web-scrapping/pkg/forms"
+
 	"github.com/gopheramit/web-scrapping/pkg/models"
 )
 
 type templateData struct {
-	CurrentYear int
-	Scrap       *models.Scrap
-	Scraps      []*models.Scrap
+	CurrentYear     int
+	Scrap           *models.Scrap
+	Scraps          []*models.Scrap
+	Flash           string
+	Form            *forms.Form
+	IsAuthenticated bool
+	//CSRFToken       string
 }
 
 func newTemplateCache(dir string) (map[string]*template.Template, error) {

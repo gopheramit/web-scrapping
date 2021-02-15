@@ -1,0 +1,31 @@
+{{template "base" .}}
+{{define "title"}}Signup Page{{end}}
+{{define "main"}}
+
+<div class="container">
+    <div class="jumbotron text-center text-success">
+        <a href="/auth{provider}" class="btn btn-danger"><span class="fa fa-google"></span> Signup with Google</a>
+    </div> 
+</div>
+<form action='/user/signup' method='POST'>
+{{with .Form}}
+<div>
+<label>Email:</label>
+{{with .Errors.Get "email"}}
+<label class='error'>{{.}}</label>
+{{end}}
+<input type='email' name='email' value='{{.Get "email"}}'>
+</div>
+<div>
+<label>Password:</label>
+{{with .Errors.Get "password"}}
+<label class='error'>{{.}}</label>
+{{end}}
+<input type='password' name='password'>
+</div>
+<div>
+<input type='submit' value='Signup'>
+</div>
+{{end}}
+</form>
+{{end}}
