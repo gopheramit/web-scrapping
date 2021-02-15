@@ -67,6 +67,25 @@ func (m *ScrapModel) GetKey(id string) (*models.Scrap, error) {
 
 }
 
+/*
+func (m *ScrapModel) IncreseCount(id string) (*models.Scrap, error) {
+
+	stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
+	row := m.DB.QueryRow(stmt, id)
+	s := &models.Scrap{}
+
+	err := row.Scan(&s.ID, &s.Email, &s.Guid, &s.Created, &s.Expires)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+	return s, nil
+
+}
+*/
 // This will return the 10 most recently created snippets.
 func (m *ScrapModel) Latest() ([]*models.Scrap, error) {
 	return nil, nil
