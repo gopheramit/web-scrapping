@@ -58,3 +58,11 @@ ADD COLUMN hashed_password CHAR(60) NOT NULL AFTER email;
 
 ALTER TABLE scraps
 ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE AFTER expires;
+
+################################
+## mysql -D web -u amit -p    ##
+##                            ##
+## select *from scraps;       ##
+##                            ##
+## 01EYHXEXG64V0JJGAEM0GJAK3P ##
+################################
