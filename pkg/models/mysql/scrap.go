@@ -71,7 +71,7 @@ func (m *ScrapModel) GetKey(id string) (*models.Scrap, error) {
 func (m *ScrapModel) Decrement(id, count int) (int, error) {
 	fmt.Println(id, count)
 	//stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
-	stmt := `INSERT INTO scraps (count)Values(?) where id=?`
+	stmt := `update scraps set count=? where id=?`
 	_, err := m.DB.Exec(stmt, count, id)
 	if err != nil {
 		return 1, err
