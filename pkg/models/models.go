@@ -24,8 +24,7 @@ type Scrap struct {
 }
 
 type User struct {
-	ID int
-
+	ID             int
 	Email          string
 	HashedPassword []byte
 	Created        time.Time
