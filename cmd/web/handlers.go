@@ -81,6 +81,15 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
 }
 
+func (app *application) getHandler(w http.ResponseWriter, r *http.Request) string {
+	// Use the GetString() method helper to retrieve the value associated with
+	// a key and convert it to a string. The empty string is returned if the
+	// key does not exist in the session data.
+
+	msg := app.session.GetString(r, "authenticatedUserID")
+	//w.Write([]byte(msg))
+	return msg
+}
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	//	var=r.URL.Query().Get("id")
@@ -90,20 +99,27 @@ func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
+	authenticatedUserID := app.session.Get(r, "authenticatedUserID")
+	fmt.Println("authenticatedUserID", authenticatedUserID)
+	if authenticatedUserID == id {
+		s, err := app.scraps.Get(id)
+		if err != nil {
+			if errors.Is(err, models.ErrNoRecord) {
+				app.notFound(w)
+			} else {
+				app.serverError(w, err)
+			}
 
-	s, err := app.scraps.Get(id)
-	if err != nil {
-		if errors.Is(err, models.ErrNoRecord) {
-			app.notFound(w)
-		} else {
-			app.serverError(w, err)
+			return
 		}
+		app.render(w, r, "show.page.tmpl", &templateData{
+			Scrap: s,
+		})
 
+	} else {
+		app.notFound(w)
 		return
 	}
-	app.render(w, r, "show.page.tmpl", &templateData{
-		Scrap: s,
-	})
 
 	// Write the snippet data as a plain-text HTTP response body.
 	//fmt.Fprintf(w, "%v", s)
@@ -155,7 +171,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	fmt.Println("amit")
+	//fmt.Println("amit")
 	key := app.genUlid()
 	keystr := key.String()
 	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, "30")
@@ -204,7 +220,10 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// Add the ID of the current user to the session, so that they are now 'logged
 	// in'.
 	fmt.Println(id)
+
 	app.session.Put(r, "authenticatedUserID", id)
+
+	//fmt.Println(r)
 	// Redirect the user to the create snippet page.
 	//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
 	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
