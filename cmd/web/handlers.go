@@ -231,9 +231,7 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
-
 	key := (r.URL.Query().Get(":key"))
-
 	s, err := app.scraps.GetKey(key)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
@@ -244,41 +242,44 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	fmt.Println(s)
-	/*
-		if s.Count > 0 {
-			doc, err := goquery.NewDocument("http://jonathanmh.com")
-			if err != nil {
-				log.Fatal(err)
-			}
+	fmt.Println(s.Count)
+	if s.Count > 0 {
+		res, err := http.Get("http://jonathanmh.com")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer res.Body.Close()
 
-			// use CSS selector found with the browser inspector
-			// for each, use index and item
-			doc.Find("body a").Each(func(index int, item *goquery.Selection) {
-				linkTag := item
-				link, _ := linkTag.Attr("href")
-				linkText := linkTag.Text()
-				fmt.Printf("Link #%d: '%s' - '%s'\n", index, linkText, link)
-			})
-			s.Count = s.Count - 1
-	*/
-	res, err := http.Get("http://jonathanmh.com")
-	if err != nil {
-		log.Fatal(err)
+		n, err := io.Copy(os.Stdout, res.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Println("Number of bytes copied to STDOUT:", n)
+
+		doc, err := goquery.NewDocumentFromReader(res.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		doc.Find("body a").Each(func(index int, item *goquery.Selection) {
+			linkTag := item
+			link, _ := linkTag.Attr("href")
+			linkText := linkTag.Text()
+			fmt.Printf("Link #%d: '%s' - '%s'\n", index, linkText, link)
+		})
+
+		cnt := s.Count - 1
+		fmt.Println(cnt)
+		_, err = app.scraps.Decrement(s.ID, cnt)
+		if err != nil {
+			fmt.Println("error here")
+		}
+
+	} else {
+		app.notFound(w)
+		return
 	}
-	defer res.Body.Close()
 
-	n, err := io.Copy(os.Stdout, res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("Number of bytes copied to STDOUT:", n)
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
 	// doc, err := goquery.NewDocument("http://jonathanmh.com")
 	// if err != nil {
 	// 	log.Fatal(err)

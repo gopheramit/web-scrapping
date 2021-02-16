@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"golang.org/x/crypto/bcrypt"
@@ -51,7 +52,7 @@ func (m *ScrapModel) Get(id int) (*models.Scrap, error) {
 
 func (m *ScrapModel) GetKey(id string) (*models.Scrap, error) {
 
-	stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
+	stmt := `SELECT id, email,guid,count,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
 	row := m.DB.QueryRow(stmt, id)
 	s := &models.Scrap{}
 
@@ -67,25 +68,17 @@ func (m *ScrapModel) GetKey(id string) (*models.Scrap, error) {
 
 }
 
-/*
-func (m *ScrapModel) IncreseCount(id string) (*models.Scrap, error) {
-
-	stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
-	row := m.DB.QueryRow(stmt, id)
-	s := &models.Scrap{}
-
-	err := row.Scan(&s.ID, &s.Email, &s.Guid, &s.Created, &s.Expires)
+func (m *ScrapModel) Decrement(id, count int) (int, error) {
+	fmt.Println(id, count)
+	//stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
+	stmt := `INSERT INTO scraps (count)Values(?) where id=?`
+	_, err := m.DB.Exec(stmt, count, id)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, models.ErrNoRecord
-		} else {
-			return nil, err
-		}
+		return 1, err
 	}
-	return s, nil
-
+	return 0, nil
 }
-*/
+
 // This will return the 10 most recently created snippets.
 func (m *ScrapModel) Latest() ([]*models.Scrap, error) {
 	return nil, nil
