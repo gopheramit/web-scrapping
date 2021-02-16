@@ -63,6 +63,7 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 
 }
 
+/*
 func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -80,7 +81,7 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
 }
-
+*/
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	//	var=r.URL.Query().Get("id")
@@ -94,6 +95,7 @@ func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("authenticatedUserID", authenticatedUserID)
 	if authenticatedUserID == id {
 		s, err := app.scraps.Get(id)
+		//fmt.Println(s.Count)
 		if err != nil {
 			if errors.Is(err, models.ErrNoRecord) {
 				app.notFound(w)
@@ -165,7 +167,8 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("amit")
 	key := app.genUlid()
 	keystr := key.String()
-	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, "30")
+	count := 1000
+	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, count, "30")
 	//rr = app.users.Insert(form.Get("email"), form.Get("password"))
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateEmail) {

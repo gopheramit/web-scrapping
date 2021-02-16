@@ -12,15 +12,15 @@ type ScrapModel struct {
 	DB *sql.DB
 }
 
-func (m *ScrapModel) Insert(email, password, guid, expires string) (int, error) {
+func (m *ScrapModel) Insert(email, password, guid string, count int, expires string) (int, error) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 
 	if err != nil {
 		return 0, err
 	}
-	stmt := `INSERT INTO scraps (email, hashed_password,guid,created, expires)VALUES(?,?,?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
-	result, err := m.DB.Exec(stmt, email, string(hashedPassword), guid, expires)
+	stmt := `INSERT INTO scraps (email, hashed_password,guid,count,created, expires)VALUES(?,?,?, ?,UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
+	result, err := m.DB.Exec(stmt, email, string(hashedPassword), guid, count, expires)
 	if err != nil {
 		return 0, err
 	}
@@ -34,10 +34,10 @@ func (m *ScrapModel) Insert(email, password, guid, expires string) (int, error) 
 // This will return a specific snippet based on its id.
 func (m *ScrapModel) Get(id int) (*models.Scrap, error) {
 
-	stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND id = ?`
+	stmt := `SELECT id, email,guid,count,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND id = ?`
 	row := m.DB.QueryRow(stmt, id)
 	s := &models.Scrap{}
-	err := row.Scan(&s.ID, &s.Email, &s.Guid, &s.Created, &s.Expires)
+	err := row.Scan(&s.ID, &s.Email, &s.Guid, &s.Count, &s.Created, &s.Expires)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, models.ErrNoRecord
@@ -55,7 +55,7 @@ func (m *ScrapModel) GetKey(id string) (*models.Scrap, error) {
 	row := m.DB.QueryRow(stmt, id)
 	s := &models.Scrap{}
 
-	err := row.Scan(&s.ID, &s.Email, &s.Guid, &s.Created, &s.Expires)
+	err := row.Scan(&s.ID, &s.Email, &s.Guid, &s.Count, &s.Created, &s.Expires)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, models.ErrNoRecord

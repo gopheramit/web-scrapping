@@ -19,10 +19,12 @@ type Scrap struct {
 	ID      int
 	Email   string
 	Guid    string
+	Count   int
 	Created time.Time
 	Expires time.Time
 }
 
+/*
 type User struct {
 	ID             int
 	Email          string
@@ -30,3 +32,4 @@ type User struct {
 	Created        time.Time
 	Active         bool
 }
+*/

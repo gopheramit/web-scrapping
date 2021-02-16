@@ -59,6 +59,9 @@ ADD COLUMN hashed_password CHAR(60) NOT NULL AFTER email;
 ALTER TABLE scraps
 ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE AFTER expires;
 
+ALTER TABLE scraps
+ADD COLUMN count int NOT NULL AFTER guid;
+
 ################################
 ## mysql -D web -u amit -p    ##
 ##                            ##
