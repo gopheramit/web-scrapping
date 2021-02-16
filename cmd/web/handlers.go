@@ -81,15 +81,6 @@ func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
 }
 
-func (app *application) getHandler(w http.ResponseWriter, r *http.Request) string {
-	// Use the GetString() method helper to retrieve the value associated with
-	// a key and convert it to a string. The empty string is returned if the
-	// key does not exist in the session data.
-
-	msg := app.session.GetString(r, "authenticatedUserID")
-	//w.Write([]byte(msg))
-	return msg
-}
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	//	var=r.URL.Query().Get("id")
@@ -100,7 +91,7 @@ func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	authenticatedUserID := app.session.Get(r, "authenticatedUserID")
-	fmt.Println("authenticatedUserID", authenticatedUserID)
+	//fmt.Println("authenticatedUserID", authenticatedUserID)
 	if authenticatedUserID == id {
 		s, err := app.scraps.Get(id)
 		if err != nil {
@@ -207,7 +198,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// Check whether the credentials are valid. If they're not, add a generic error
 	// message to the form failures map and re-display the login page.
 	form := forms.New(r.PostForm)
-	id, err := app.users.Authenticate(form.Get("email"), form.Get("password"))
+	id, err := app.scraps.Authenticate(form.Get("email"), form.Get("password"))
 	if err != nil {
 		if errors.Is(err, models.ErrInvalidCredentials) {
 			form.Errors.Add("generic", "Email or Password is incorrect")

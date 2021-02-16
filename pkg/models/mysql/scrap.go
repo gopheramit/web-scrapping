@@ -90,3 +90,30 @@ func (m *ScrapModel) IncreseCount(id string) (*models.Scrap, error) {
 func (m *ScrapModel) Latest() ([]*models.Scrap, error) {
 	return nil, nil
 }
+
+func (m *ScrapModel) Authenticate(email, password string) (int, error) {
+	var id int
+	var hashedPassword []byte
+	stmt := "SELECT id, hashed_password FROM scraps WHERE email = ? AND active = TRUE"
+	row := m.DB.QueryRow(stmt, email)
+	err := row.Scan(&id, &hashedPassword)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, models.ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+	// Check whether the hashed password and plain-text password provided match.
+	// If they don't, we return the ErrInvalidCredentials error.
+	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+			return 0, models.ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+	// Otherwise, the password is correct. Return the user ID.
+	return id, nil
+}
