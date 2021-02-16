@@ -4,10 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"io"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
@@ -250,42 +248,24 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 		}
 		defer res.Body.Close()
 
-		n, err := io.Copy(os.Stdout, res.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		log.Println("Number of bytes copied to STDOUT:", n)
-
 		doc, err := goquery.NewDocumentFromReader(res.Body)
 		if err != nil {
 			log.Fatal(err)
 		}
-		doc.Find("body a").Each(func(index int, item *goquery.Selection) {
-			linkTag := item
-			link, _ := linkTag.Attr("href")
-			linkText := linkTag.Text()
-			fmt.Printf("Link #%d: '%s' - '%s'\n", index, linkText, link)
-		})
+		fmt.Println(doc.Html())
+		//return doc.Html()
 
 		cnt := s.Count - 1
 		fmt.Println(cnt)
 		_, err = app.scraps.Decrement(s.ID, cnt)
 		if err != nil {
 			fmt.Println("error here")
-		
+
 		}
 
 	} else {
 		app.notFound(w)
 		return
 	}
-
-	// doc, err := goquery.NewDocument("http://jonathanmh.com")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// print(doc)
 
 }
