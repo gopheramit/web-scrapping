@@ -252,9 +252,11 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(doc.Html())
+		//fmt.Println(doc.Html())
 		//return doc.Html()
+		resullt, err := doc.Html()
 
+		w.Write([]byte(resullt))
 		cnt := s.Count - 1
 		fmt.Println(cnt)
 		_, err = app.scraps.Decrement(s.ID, cnt)
