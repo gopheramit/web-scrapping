@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -92,8 +91,7 @@ func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(user.UserID)
 
 	if err != nil {
-
-		//fmt.Fprintln(w, r)
+		fmt.Fprintln(w, r)
 		fmt.Println("error here")
 		return
 	}
@@ -112,8 +110,10 @@ func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println(id)
-	t, _ := template.ParseFiles("ui/html/success.html")
-	t.Execute(w, user)
+	app.session.Put(r, "authenticatedUserID", id)
+	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+	//t, _ := template.ParseFiles("ui/html/success.html")
+	//t.Execute(w, user)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
