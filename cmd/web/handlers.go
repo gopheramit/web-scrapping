@@ -88,10 +88,30 @@ func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
 }
 func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 	user, err := gothic.CompleteUserAuth(w, r)
+	fmt.Println(user.Email)
+	fmt.Println(user.UserID)
+
 	if err != nil {
-		fmt.Fprintln(w, r)
+
+		//fmt.Fprintln(w, r)
+		fmt.Println("error here")
 		return
 	}
+	key := app.genUlid()
+	keystr := key.String()
+	count := 1000
+	id, err := app.scraps.Insert(user.UserID, user.Email, user.UserID, keystr, count, "30")
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			//form.Errors.Add("email", "Address is already in use")
+			app.render(w, r, "login.page.tmpl", nil)
+		} else {
+
+			app.serverError(w, err)
+		}
+		return
+	}
+	fmt.Println(id)
 	t, _ := template.ParseFiles("ui/html/success.html")
 	t.Execute(w, user)
 }
