@@ -228,8 +228,13 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+//
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
-	key := (r.URL.Query().Get(":key"))
+	key := (r.URL.Query().Get("api_key"))
+	url := r.URL.Query().Get("url")
+
+	//fmt.Println(url)
+
 	s, err := app.scraps.GetKey(key)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
@@ -242,7 +247,8 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(s.Count)
 	if s.Count > 0 {
-		res, err := http.Get("http://jonathanmh.com")
+		//res, err := http.Get("http://jonathanmh.com")
+		res, err := http.Get(url)
 		if err != nil {
 			log.Fatal(err)
 		}
