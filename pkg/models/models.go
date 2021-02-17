@@ -17,6 +17,7 @@ var (
 
 type Scrap struct {
 	ID      int
+	Soc_id  int
 	Email   string
 	Guid    string
 	Count   int

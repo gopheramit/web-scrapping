@@ -62,6 +62,12 @@ ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE AFTER expires;
 ALTER TABLE scraps
 ADD COLUMN count int NOT NULL AFTER guid;
 
+ALTER TABLE scraps
+ADD COLUMN soc_id CHAR(60) NOT NULL AFTER id;
+
+ALTER TABLE scraps
+DROP COLUMN soc_id;
+
 ################################
 ## mysql -D web -u amit -p    ##
 ##                            ##
@@ -69,3 +75,4 @@ ADD COLUMN count int NOT NULL AFTER guid;
 ##                            ##
 ## 01EYHXEXG64V0JJGAEM0GJAK3P ##
 ################################
+

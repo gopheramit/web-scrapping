@@ -19,22 +19,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	//data := &templateData{Scrap: s}
-	/*files := []string{
-		//"./ui/html/index.html",
-		"./ui/html/home.page.tmpl",
-		"./ui/html/base.layout.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	err = ts.Execute(w, data)
-	if err != nil {
-		app.serverError(w, err)
-	}*/
 	s, err := app.scraps.Latest()
 	if err != nil {
 		app.serverError(w, err)
@@ -60,28 +44,8 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 		//Scrap: s,
 	})
 	//w.Write([]byte("About pricing!"))
-
 }
 
-/*
-func (app *application) createScarp(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", http.MethodPost)
-		app.clientError(w, http.StatusMethodNotAllowed)
-		return
-	}
-	email := "abcd@gmail.com"
-	guid := "asdfghkl"
-	expires := "8"
-
-	id, err := app.scraps.Insert(email, "amit", guid, expires)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-	http.Redirect(w, r, fmt.Sprintf("/scrap?id=%d", id), http.StatusSeeOther)
-}
-*/
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	//	var=r.URL.Query().Get("id")
@@ -168,7 +132,8 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	key := app.genUlid()
 	keystr := key.String()
 	count := 1000
-	id, err := app.scraps.Insert(form.Get("email"), form.Get("password"), keystr, count, "30")
+	socID := "1"
+	id, err := app.scraps.Insert(socID, form.Get("email"), form.Get("password"), keystr, count, "30")
 	//rr = app.users.Insert(form.Get("email"), form.Get("password"))
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateEmail) {
@@ -228,7 +193,7 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-//
+//add swagger for following handler.
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 	key := (r.URL.Query().Get("api_key"))
 	url := r.URL.Query().Get("url")
