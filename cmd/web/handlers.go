@@ -87,41 +87,51 @@ func (app *application) authbegin(w http.ResponseWriter, r *http.Request) {
 }
 func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 	user, err := gothic.CompleteUserAuth(w, r)
-	fmt.Println(user.Email)
-	fmt.Println(user.UserID)
-
+	//fmt.Println(user.Email)
+	//fmt.Println(user.UserID)
 	if err != nil {
 		fmt.Fprintln(w, r)
 		fmt.Println("error here")
 		return
 	}
-	key := app.genUlid()
-	keystr := key.String()
-	count := 1000
-	id, err := app.scraps.Insert(user.UserID, user.Email, user.UserID, keystr, count, "30")
-	if err != nil {
-		if errors.Is(err, models.ErrDuplicateEmail) {
-			//form.Errors.Add("email", "Address is already in use")
-			app.render(w, r, "login.page.tmpl", nil)
-		} else {
-
-			app.serverError(w, err)
-		}
+	s, err := app.scraps.GetID(user.UserID)
+	//fmt.Println(err)
+	//fmt.Println(s)
+	if s != nil {
+		//	fmt.Println("user found", s.ID)
+		app.session.Put(r, "authenticatedUserID", s.ID)
+		http.Redirect(w, r, fmt.Sprintf("/scrap/%d", s.ID), http.StatusSeeOther)
 		return
+	} else {
+		//fmt.Println("In else of linkscrape")
+		key := app.genUlid()
+		keystr := key.String()
+		count := 1000
+		id, err := app.scraps.Insert(user.UserID, user.Email, user.UserID, keystr, count, "30")
+		if err != nil {
+			if errors.Is(err, models.ErrDuplicateEmail) {
+				//form.Errors.Add("email", "Address is already in use")
+				app.render(w, r, "login.page.tmpl", nil)
+			} else {
+
+				app.serverError(w, err)
+			}
+			return
+		}
+		fmt.Println(id)
+		app.session.Put(r, "authenticatedUserID", id)
+		http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+		//t, _ := template.ParseFiles("ui/html/success.html")
+		//fort.Execute(w, user)
 	}
-	fmt.Println(id)
-	app.session.Put(r, "authenticatedUserID", id)
-	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
-	//t, _ := template.ParseFiles("ui/html/success.html")
-	//t.Execute(w, user)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 func (app *application) login(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login1.page.tmpl", nil)
 }
-
+*/
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup1.page.tmpl", &templateData{
 		// Pass a new empty forms.Form object to the template.

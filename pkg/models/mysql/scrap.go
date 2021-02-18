@@ -83,6 +83,22 @@ func (m *ScrapModel) Decrement(id, count int) (int, error) {
 func (m *ScrapModel) Latest() ([]*models.Scrap, error) {
 	return nil, nil
 }
+func (m *ScrapModel) GetID(socID string) (*models.Scrap, error) {
+	fmt.Println("in GEtID")
+	stmt := `SELECT id, soc_id,email,guid,count,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND soc_id=?`
+	row := m.DB.QueryRow(stmt, socID)
+	s := &models.Scrap{}
+
+	err := row.Scan(&s.ID, &s.Soc_id, &s.Email, &s.Guid, &s.Count, &s.Created, &s.Expires)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+	return s, nil
+}
 
 func (m *ScrapModel) Authenticate(email, password string) (int, error) {
 	var id int
