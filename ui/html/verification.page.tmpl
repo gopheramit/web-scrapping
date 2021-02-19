@@ -1,7 +1,7 @@
 {{template "base" .}}
 {{define "title"}}Verify OTP {{end}}
 {{define "main"}}
-<form action='/user/login' method='POST'>
+<form action='/user/verify' method='POST'>
 {{with .Form}}
 <table align = "center" style = "text-align: right">
 <div>
@@ -13,7 +13,7 @@
 {{with .Errors.Get "otp"}}
 <label class='error'>{{.}}</label>
 {{end}}
-<input type='email' name='email' value='{{.Get "otp"}}'>
+<input type='text' name='otp' value='{{.Get "otp"}}'>
 </td>
 </tr>
 </div>

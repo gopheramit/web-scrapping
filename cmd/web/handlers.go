@@ -253,6 +253,49 @@ func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 		Form: forms.New(nil),
 	})
 }
+
+func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+	form := forms.New(r.PostForm)
+	otp := form.Get("otp")
+	fmt.Println("otp:", otp)
+	http.Redirect(w, r, "/pricing", http.StatusSeeOther)
+	/*
+		err := r.ParseForm()
+		if err != nil {
+			app.clientError(w, http.StatusBadRequest)
+			return
+		}
+		// Check whether the credentials are valid. If they're not, add a generic error
+		// message to the form failures map and re-display the login page.
+		form := forms.New(r.PostForm)
+		id, err := app.scraps.Authenticate(form.Get("email"), form.Get("password"))
+		if err != nil {
+			if errors.Is(err, models.ErrInvalidCredentials) {
+				form.Errors.Add("generic", "Email or Password is incorrect")
+				app.render(w, r, "login.page.tmpl", &templateData{Form: form})
+			} else {
+				app.serverError(w, err)
+			}
+			return
+		}
+		// Add the ID of the current user to the session, so that they are now 'logged
+		// in'.
+		fmt.Println(id)
+
+		app.session.Put(r, "authenticatedUserID", id)
+
+		//fmt.Println(r)
+		// Redirect the user to the create snippet page.
+		//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+		88?*?*/
+}
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
