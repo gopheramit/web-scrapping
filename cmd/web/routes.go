@@ -18,7 +18,7 @@ import (
 
 func (app *application) routes() http.Handler {
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeader)
-	dynamicMiddleware := alice.New(app.session.Enable) //noSurf)
+	dynamicMiddleware := alice.New(app.session.Enable) //, noSurf)
 	//mux := http.NewServeMux()
 	key1 := "DoN4QZCXaa3TJfr4BJZMQZNo" // Replace with your SESSION_SECRET or similar
 	maxAge := 86400 * 30               // 30 days
@@ -50,6 +50,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/user/signup", dynamicMiddleware.ThenFunc(app.signupUserForm))
 	mux.Post("/user/signup", dynamicMiddleware.ThenFunc(app.signupUser))
+	mux.Get("/user/verify", dynamicMiddleware.ThenFunc(app.VerifyUserForm))
 	mux.Get("/user/login", dynamicMiddleware.ThenFunc(app.loginUserForm))
 	mux.Post("/user/login", dynamicMiddleware.ThenFunc(app.loginUser))
 	mux.Post("/user/logout", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.logoutUser))

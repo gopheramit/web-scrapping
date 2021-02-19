@@ -1,0 +1,29 @@
+{{template "base" .}}
+{{define "title"}}Verify OTP {{end}}
+{{define "main"}}
+<form action='/user/login' method='POST'>
+{{with .Form}}
+<table align = "center" style = "text-align: right">
+<div>
+<tr>
+<th>
+<label>OTP:</label>
+</th>
+<td>
+{{with .Errors.Get "otp"}}
+<label class='error'>{{.}}</label>
+{{end}}
+<input type='email' name='email' value='{{.Get "otp"}}'>
+</td>
+</tr>
+</div>
+</table>
+<div>
+<input type='submit' value='Verify' class="btn btn-success">
+</div> 
+</div>
+</div>
+{{end}}
+</form>
+
+{{end}}

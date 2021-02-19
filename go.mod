@@ -9,6 +9,7 @@ require (
 	github.com/golangcollege/sessions v1.2.0
 	github.com/gorilla/sessions v1.2.1
 	github.com/justinas/alice v1.2.0
+	github.com/justinas/nosurf v1.1.1
 	github.com/markbates/goth v1.66.1
 	github.com/oklog/ulid v1.3.1
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9

@@ -5,11 +5,11 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"net/smtp"
 	"strconv"
-	"text/template"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gopheramit/web-scrapping/pkg/forms"
@@ -203,7 +203,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 
 	// Receiver email address.
 	to := []string{
-		"agrawalachal1304@gmail.com",
+		"amittest53@gmail.com",
 	}
 
 	// smtp server configuration.
@@ -235,14 +235,19 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("Email Sent!")
+	fmt.Println(otp)
 	fmt.Println(id)
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
-
-	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
+	//http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 
 }
-
+func (app *application) VerifyUserForm(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "verification.page.tmpl", &templateData{
+		Form: forms.New(nil),
+	})
+}
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login.page.tmpl", &templateData{
 		Form: forms.New(nil),
