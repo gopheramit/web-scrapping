@@ -25,6 +25,14 @@ type Scrap struct {
 	Expires time.Time
 }
 
+type Otps struct {
+	ID       int
+	Otp      int64
+	Verified bool
+	Created  time.Time
+	Expires  time.Time
+}
+
 /*
 type User struct {
 	ID             int

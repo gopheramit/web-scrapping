@@ -1,78 +1,32 @@
-CREATE DATABASE web CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
-
-
-
+CREATE DATABASE webscrap CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE webscrap;
 CREATE TABLE scraps (
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+soc_id CHAR(60) NOT NULL,
 email VARCHAR(100) NOT NULL,
-guid VARCHAR(36) NOT NULL,
-created DATETIME NOT NULL,
-expires DATETIME NOT NULL
-);
-
-CREATE INDEX idx_snippets_created ON scraps(created);
-
-
-INSERT INTO scraps (email,guid,created, expires) VALUES (
-'amitwpu@gmail.com',
-"qwertyuiop",
-UTC_TIMESTAMP(),
-DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
-);
-
-INSERT INTO scraps (email,guid,created, expires) VALUES (
-'amitwpu2019@gmail.com',
-"qwasdfghj",
-UTC_TIMESTAMP(),
-DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
-);
-
-
-CREATE USER 'amit'@'localhost';
-
-//GRANT SELECT, INSERT, UPDATE,ALTER ON web.* TO 'amit'@'localhost';
-
-ALTER USER 'amit'@'localhost' IDENTIFIED BY 'pass';
-
-SELECT id, email,guid, expires FROM scraps;-------------->testing
-
-379756554270-olm9ma6g4dru3lil2cse84eaeimpj0u2.apps.googleusercontent.com
-
-
-Creating psudo user model
-
-CREATE TABLE users (
-id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
-email VARCHAR(255) NOT NULL,
 hashed_password CHAR(60) NOT NULL,
+guid VARCHAR(36) NOT NULL,
+count int NOT NULL,
 created DATETIME NOT NULL,
+expires DATETIME NOT NULL,
 active BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
+CREATE INDEX idx_snippets_created ON scraps(created);
+ALTER TABLE scraps ADD CONSTRAINT users_uc_email UNIQUE (email);
 
-ALTER TABLE scraps
-ADD COLUMN hashed_password CHAR(60) NOT NULL AFTER email;
+CREATE TABLE Otps (
+id INTEGER NOT NULL PRIMARY KEY ,
+otp INTEGER NOT NULL,
+verify BOOLEAN NOT NULL DEFAULT FALSE,
+created DATETIME NOT NULL,
+expires DATETIME NOT NULL
+);
+CREATE USER 'scrapit'@'localhost';
+ALTER USER 'scrapit'@'localhost' IDENTIFIED BY 'pass';
 
-ALTER TABLE scraps
-ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE AFTER expires;
-
-ALTER TABLE scraps
-ADD COLUMN count int NOT NULL AFTER guid;
-
-ALTER TABLE scraps
-ADD COLUMN soc_id CHAR(60) NOT NULL AFTER id;
-
-ALTER TABLE scraps
-DROP COLUMN soc_id;
-
-################################
-## mysql -D web -u amit -p    ##
-##                            ##
-## select *from scraps;       ##
-##                            ##
-## 01EYHXEXG64V0JJGAEM0GJAK3P ##
-################################
-
+GRANT CREATE,SELECT, INSERT, UPDATE,ALTER ON webscrap.* TO 'scrapit'@'localhost';
+mysql -D webscrap -u scrapits -p  
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
