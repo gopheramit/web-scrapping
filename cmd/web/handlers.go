@@ -1,17 +1,38 @@
 package main
 
 import (
+	"bytes"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"net/smtp"
 	"strconv"
+	"text/template"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/markbates/goth/gothic"
 )
+
+const otpChars = "1234567890"
+
+func GenerateOTP(length int) (string, error) {
+	buffer := make([]byte, length)
+	_, err := rand.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+
+	otpCharsLength := len(otpChars)
+	for i := 0; i < length; i++ {
+		buffer[i] = otpChars[int(buffer[i])%otpCharsLength]
+	}
+
+	return string(buffer), nil
+}
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -175,9 +196,49 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	otp, err := GenerateOTP(6)
+
+	from := "flutterproject13@gmail.com"
+	password := "iskcon123"
+
+	// Receiver email address.
+	to := []string{
+		"agrawalachal1304@gmail.com",
+	}
+
+	// smtp server configuration.
+	smtpHost := "smtp.gmail.com"
+	smtpPort := "587"
+
+	// Authentication.
+	auth := smtp.PlainAuth("", from, password, smtpHost)
+
+	t, _ := template.ParseFiles("ui/html/verificationcode.html")
+
+	var body bytes.Buffer
+
+	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body.Write([]byte(fmt.Sprintf("Subject: This is a test subject \n%s\n\n", mimeHeaders)))
+
+	t.Execute(&body, struct {
+		Name    string
+		Message string
+	}{
+		Name:    "Achal Agrawal",
+		Message: "Your OTP is : " + otp,
+	})
+
+	// Sending email.
+	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Email Sent!")
 	fmt.Println(id)
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+
 	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 
 }
