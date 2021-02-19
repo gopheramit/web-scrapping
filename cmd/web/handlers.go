@@ -237,6 +237,11 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Email Sent!")
 	fmt.Println(otp)
 	fmt.Println(id)
+	err = app.otps.InsertOtp(id, otp)
+	if err != nil {
+		fmt.Println("error in otp insert ")
+
+	}
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
@@ -264,6 +269,7 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
+
 	http.Redirect(w, r, "/pricing", http.StatusSeeOther)
 	/*
 		err := r.ParseForm()

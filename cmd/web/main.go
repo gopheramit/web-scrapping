@@ -21,9 +21,9 @@ type application struct {
 	infoLog       *log.Logger
 	templateCache map[string]*template.Template
 	scraps        *mysql.ScrapModel
-	//users         *mysql.UserModel
-	session *sessions.Session
-	Key     *string
+	otps          *mysql.OtpModel
+	session       *sessions.Session
+	Key           *string
 }
 
 func main() {
@@ -55,9 +55,9 @@ func main() {
 		infoLog:       infoLog,
 		templateCache: templateCache,
 		scraps:        &mysql.ScrapModel{DB: db},
-		//users:         &mysql.UserModel{DB: db},
-		session: session,
-		Key:     usrKey,
+		otps:          &mysql.OtpModel{DB: db},
+		session:       session,
+		Key:           usrKey,
 	}
 	//usrKey := "01ETWM58TWCWJ3JZYWH2Q33B1N"
 

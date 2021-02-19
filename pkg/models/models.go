@@ -27,7 +27,7 @@ type Scrap struct {
 
 type Otps struct {
 	ID       int
-	Otp      int64
+	Otp      string
 	Verified bool
 	Created  time.Time
 	Expires  time.Time
