@@ -7,21 +7,41 @@
         <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google"></span> Login with Google</a>
     </div>
 </div>
+<div class="container">
+<div class="jumbotron text-center text-success">
 <form action='/user/login' method='POST' novalidate>
 {{with .Form}}
+<table align = "center" style = "text-align: right">
+<div>
+<tr>
+<th>
+<label>Email:</label>
+</th>
+<td>
 {{with .Errors.Get "generic"}}
 <div class='error'>{{.}}</div>
 {{end}}
 <div>
-<label>Email:</label>
+{{/* <label>Email:</label> */}}
 <input type='email' name='email' value='{{.Get "email"}}'>
+</td>
+</tr>
 </div>
+
 <div>
+<tr>
+<th>
 <label>Password:</label>
+</th>
+<td>
 <input type='password' name='password'>
+</td></tr>
 </div>
+</table>
 <div>
-<input type='submit' value='Login'>
+<input type='submit' value='Login' class="btn btn-success">
+</div> 
+</div>
 </div>
 {{end}}
 </form>
