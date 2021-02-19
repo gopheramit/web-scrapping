@@ -242,12 +242,15 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error in otp insert ")
 
 	}
+
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
-	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
+	//http.Redirect(w, r, "/user/verify/:id", http.StatusSeeOther)
 	//http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+	http.Redirect(w, r, fmt.Sprintf("/user/verify/%d", id), http.StatusSeeOther)
 
 }
+
 func (app *application) VerifyUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "verification.page.tmpl", &templateData{
 		Form: forms.New(nil),
@@ -269,6 +272,8 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
+
+	//s, err := app.otps.GetOtp(id)
 
 	http.Redirect(w, r, "/pricing", http.StatusSeeOther)
 	/*
