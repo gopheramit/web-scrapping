@@ -149,12 +149,6 @@ func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
-/*
-func (app *application) login(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login1.page.tmpl", nil)
-}
-*/
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup1.page.tmpl", &templateData{
 		// Pass a new empty forms.Form object to the template.
@@ -200,29 +194,21 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	}
 	otp, err := GenerateOTP(6)
 	userID = id
-
 	from := "flutterproject13@gmail.com"
 	password := "iskcon123"
-
 	// Receiver email address.
 	to := []string{
 		"amittest53@gmail.com",
 	}
-
 	// smtp server configuration.
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
-
 	// Authentication.
 	auth := smtp.PlainAuth("", from, password, smtpHost)
-
 	t, _ := template.ParseFiles("ui/html/verificationcode.html")
-
 	var body bytes.Buffer
-
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body.Write([]byte(fmt.Sprintf("Subject: This is a test subject \n%s\n\n", mimeHeaders)))
-
 	t.Execute(&body, struct {
 		Name    string
 		Message string
@@ -230,7 +216,6 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		Name:    "Achal Agrawal",
 		Message: "Your OTP is : " + otp,
 	})
-
 	// Sending email.
 	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
 	if err != nil {
@@ -245,12 +230,10 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error in otp insert ")
 
 	}
-
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
 	//http.Redirect(w, r, "/user/login", http.StatusSeeOther)
-
 }
 
 func (app *application) VerifyUserForm(w http.ResponseWriter, r *http.Request) {
@@ -265,7 +248,6 @@ func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
-
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
@@ -274,7 +256,6 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
-
 	s, err := app.otps.GetData(userID)
 	if err != nil {
 		fmt.Println(err)
@@ -327,14 +308,22 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// Add the ID of the current user to the session, so that they are now 'logged
 	// in'.
-	fmt.Println(id)
+	s, err := app.otps.GetData(id)
+	if err != nil {
+		fmt.Println("error while verifying user login")
+	}
+	if s.Verified == true {
+		fmt.Println(id)
+		app.session.Put(r, "authenticatedUserID", id)
+		//fmt.Println(r)
+		// Redirect the user to the create snippet page.
+		//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
+		http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
+	} else {
+		app.render(w, r, "verification.page.tmpl", &templateData{Form: form})
+		fmt.Println("User not verified reddirecting to verification page")
+	}
 
-	app.session.Put(r, "authenticatedUserID", id)
-
-	//fmt.Println(r)
-	// Redirect the user to the create snippet page.
-	//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
-	http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
 }
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	app.session.Remove(r, "authenticatedUserID")
@@ -346,9 +335,6 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 	key := (r.URL.Query().Get("api_key"))
 	url := r.URL.Query().Get("url")
-
-	//fmt.Println(url)
-
 	s, err := app.scraps.GetKey(key)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
@@ -375,7 +361,6 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 		//fmt.Println(doc.Html())
 		//return doc.Html()
 		resullt, err := doc.Html()
-
 		w.Write([]byte(resullt))
 		cnt := s.Count - 1
 		fmt.Println(cnt)
@@ -384,7 +369,6 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("error here")
 
 		}
-
 	} else {
 		app.notFound(w)
 		return
