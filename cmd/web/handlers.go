@@ -130,11 +130,12 @@ func (app *application) auth(w http.ResponseWriter, r *http.Request) {
 		key := app.genUlid()
 		keystr := key.String()
 		count := 1000
+		form := forms.New(r.PostForm)
 		id, err := app.scraps.Insert(user.UserID, user.Email, user.UserID, keystr, count, "30")
 		if err != nil {
 			if errors.Is(err, models.ErrDuplicateEmail) {
-				//form.Errors.Add("email", "Address is already in use")
-				app.render(w, r, "login.page.tmpl", nil)
+				form.Errors.Add("email", "Address is already in use")
+				app.render(w, r, "login.page.tmpl", &templateData{Form: form})
 			} else {
 
 				app.serverError(w, err)
@@ -185,7 +186,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if errors.Is(err, models.ErrDuplicateEmail) {
 			form.Errors.Add("email", "Address is already in use")
-			app.render(w, r, "signup1.page.tmpl", nil)
+			app.render(w, r, "signup1.page.tmpl", &templateData{Form: form})
 		} else {
 
 			app.serverError(w, err)
