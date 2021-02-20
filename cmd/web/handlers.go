@@ -280,15 +280,14 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("error in verify user getotp")
-	} else {
-		fmt.Println("retrived suceesfully")
-	}
-	fmt.Println("s;")
-	fmt.Println(s)
+	} //else {
+	//fmt.Println("retrived suceesfully")
+	//}
+
 	if s.Otp == otp {
 		http.Redirect(w, r, "/pricing", http.StatusSeeOther)
 	} else {
-		app.render(w, r, "login.page.tmpl", &templateData{
+		app.render(w, r, "verification.page.tmpl", &templateData{
 			Form: forms.New(nil),
 		})
 	}
