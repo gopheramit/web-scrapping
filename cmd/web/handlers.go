@@ -263,29 +263,28 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	} //else {
 	//fmt.Println("retrived suceesfully")
 	//}
-
+	//t := time.now()
 	if s.Otp == otp {
 		_, err := app.otps.UppdateVerifyStatus(userID)
 		if err != nil {
 			//app.render(w, r, "verification.page.tmpl", nil)
 			fmt.Println("Error in updating status")
 		}
+		s, err = app.otps.GetData(userID)
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println("error in verify user in getdata ")
+		}
+		if s.Verified == true {
+			http.Redirect(w, r, "/pricing", http.StatusSeeOther)
+		} else {
+			app.render(w, r, "verification.page.tmpl", &templateData{Form: forms.New(nil)})
+			fmt.Println("Not verified")
+		}
 	} else {
-		app.render(w, r, "verification.page.tmpl", nil)
+		app.render(w, r, "verification.page.tmpl", &templateData{Form: forms.New(nil)})
 		fmt.Println("Wrong Otp")
 	}
-	s, err = app.otps.GetData(userID)
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("error in verify user in getdata ")
-	}
-	if s.Verified == true {
-		http.Redirect(w, r, "/pricing", http.StatusSeeOther)
-	} else {
-		app.render(w, r, "verification.page.tmpl", nil)
-		fmt.Println("Not verified")
-	}
-
 }
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()

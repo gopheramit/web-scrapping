@@ -23,7 +23,7 @@ func (m *OtpModel) InsertOtp(id int, otp string) error {
 
 func (m *OtpModel) GetData(id int) (*models.Otps, error) {
 
-	stmt := `SELECT id, otp,verify,created, expires FROM Otps WHERE  id = ?`
+	stmt := `SELECT id, otp,verify,created, expires FROM Otps WHERE expires > UTC_TIMESTAMP() and  id = ?`
 	row := m.DB.QueryRow(stmt, id)
 	s := &models.Otps{}
 	err := row.Scan(&s.ID, &s.Otp, &s.Verified, &s.Created, &s.Expires)
@@ -41,7 +41,7 @@ func (m *OtpModel) GetData(id int) (*models.Otps, error) {
 func (m *OtpModel) UppdateVerifyStatus(id int) (int, error) {
 	//fmt.Println(id, count)
 	//stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
-	stmt := `update Otps set verify=? where id=?`
+	stmt := `update Otps set verify=? where WHERE expires > UTC_TIMESTAMP() and id=?`
 	_, err := m.DB.Exec(stmt, true, id)
 	if err != nil {
 		return 1, err
