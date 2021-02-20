@@ -250,7 +250,6 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
 	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
 	//http.Redirect(w, r, "/user/login", http.StatusSeeOther)
-	//http.Redirect(w, r, fmt.Sprintf("/user/verify/%d", id), http.StatusSeeOther)
 
 }
 
@@ -276,7 +275,7 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
 
-	s, err := app.otps.GetOtp(userID)
+	s, err := app.otps.GetData(userID)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("error in verify user getotp")
@@ -285,42 +284,27 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	//}
 
 	if s.Otp == otp {
+		_, err := app.otps.UppdateVerifyStatus(userID)
+		if err != nil {
+			//app.render(w, r, "verification.page.tmpl", nil)
+			fmt.Println("Error in updating status")
+		}
+	} else {
+		app.render(w, r, "verification.page.tmpl", nil)
+		fmt.Println("Wrong Otp")
+	}
+	s, err = app.otps.GetData(userID)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("error in verify user in getdata ")
+	}
+	if s.Verified == true {
 		http.Redirect(w, r, "/pricing", http.StatusSeeOther)
 	} else {
-		app.render(w, r, "verification.page.tmpl", &templateData{
-			Form: forms.New(nil),
-		})
+		app.render(w, r, "verification.page.tmpl", nil)
+		fmt.Println("Not verified")
 	}
-	/*
-		err := r.ParseForm()
-		if err != nil {
-			app.clientError(w, http.StatusBadRequest)
-			return
-		}
-		// Check whether the credentials are valid. If they're not, add a generic error
-		// message to the form failures map and re-display the login page.
-		form := forms.New(r.PostForm)
-		id, err := app.scraps.Authenticate(form.Get("email"), form.Get("password"))
-		if err != nil {
-			if errors.Is(err, models.ErrInvalidCredentials) {
-				form.Errors.Add("generic", "Email or Password is incorrect")
-				app.render(w, r, "login.page.tmpl", &templateData{Form: form})
-			} else {
-				app.serverError(w, err)
-			}
-			return
-		}
-		// Add the ID of the current user to the session, so that they are now 'logged
-		// in'.
-		fmt.Println(id)
 
-		app.session.Put(r, "authenticatedUserID", id)
-
-		//fmt.Println(r)
-		// Redirect the user to the create snippet page.
-		//http.Redirect(w, r, "/snippet/create", http.StatusSeeOther)
-		http.Redirect(w, r, fmt.Sprintf("/scrap/%d", id), http.StatusSeeOther)
-		88?*?*/
 }
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()

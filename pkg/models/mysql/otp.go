@@ -21,7 +21,7 @@ func (m *OtpModel) InsertOtp(id int, otp string) error {
 	return nil
 }
 
-func (m *OtpModel) GetOtp(id int) (*models.Otps, error) {
+func (m *OtpModel) GetData(id int) (*models.Otps, error) {
 
 	stmt := `SELECT id, otp,verify,created, expires FROM Otps WHERE  id = ?`
 	row := m.DB.QueryRow(stmt, id)
@@ -36,4 +36,15 @@ func (m *OtpModel) GetOtp(id int) (*models.Otps, error) {
 	}
 	return s, nil
 
+}
+
+func (m *OtpModel) UppdateVerifyStatus(id int) (int, error) {
+	//fmt.Println(id, count)
+	//stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
+	stmt := `update Otps set verify=? where id=?`
+	_, err := m.DB.Exec(stmt, true, id)
+	if err != nil {
+		return 1, err
+	}
+	return 0, nil
 }
