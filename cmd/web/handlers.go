@@ -19,6 +19,8 @@ import (
 
 const otpChars = "1234567890"
 
+var userID int
+
 func GenerateOTP(length int) (string, error) {
 	buffer := make([]byte, length)
 	_, err := rand.Read(buffer)
@@ -197,6 +199,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	otp, err := GenerateOTP(6)
+	userID = id
 
 	from := "flutterproject13@gmail.com"
 	password := "iskcon123"
@@ -245,9 +248,9 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
-	//http.Redirect(w, r, "/user/verify/:id", http.StatusSeeOther)
+	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
 	//http.Redirect(w, r, "/user/login", http.StatusSeeOther)
-	http.Redirect(w, r, fmt.Sprintf("/user/verify/%d", id), http.StatusSeeOther)
+	//http.Redirect(w, r, fmt.Sprintf("/user/verify/%d", id), http.StatusSeeOther)
 
 }
 
@@ -273,9 +276,22 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
 
-	//s, err := app.otps.GetOtp(id)
-
-	http.Redirect(w, r, "/pricing", http.StatusSeeOther)
+	s, err := app.otps.GetOtp(userID)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("error in verify user getotp")
+	} else {
+		fmt.Println("retrived suceesfully")
+	}
+	fmt.Println("s;")
+	fmt.Println(s)
+	if s.Otp == otp {
+		http.Redirect(w, r, "/pricing", http.StatusSeeOther)
+	} else {
+		app.render(w, r, "login.page.tmpl", &templateData{
+			Form: forms.New(nil),
+		})
+	}
 	/*
 		err := r.ParseForm()
 		if err != nil {

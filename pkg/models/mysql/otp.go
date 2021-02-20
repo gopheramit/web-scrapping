@@ -23,10 +23,10 @@ func (m *OtpModel) InsertOtp(id int, otp string) error {
 
 func (m *OtpModel) GetOtp(id int) (*models.Otps, error) {
 
-	stmt := `SELECT id,otp,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND id = ?`
+	stmt := `SELECT id, otp,verified,created, expires FROM scraps WHERE  id = ?`
 	row := m.DB.QueryRow(stmt, id)
 	s := &models.Otps{}
-	err := row.Scan(&s.ID, &s.Otp, &s.Created, &s.Expires)
+	err := row.Scan(&s.ID, &s.Otp, &s.Verified, &s.Created, &s.Expires)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, models.ErrNoRecord
