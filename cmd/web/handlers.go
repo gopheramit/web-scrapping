@@ -393,7 +393,13 @@ func (app *application) JsRendering(w http.ResponseWriter, r *http.Request) {
 			g.GetRendered("https://jonathanmh.com", g.Opt.ParseFunc)
 		},
 		ParseFunc: func(g *geziyor.Geziyor, r *client.Response) {
-			fmt.Println(string(r.Body))
+			resullt := r.HTMLDoc
+			result, err := resullt.Html()
+			if err != nil {
+				fmt.Println("errorin js rendering handler")
+			}
+			w.Write([]byte(result))
+			//fmt.Println(string(r.Body))
 		},
 		//BrowserEndpoint: "ws://localhost:8080",
 	}).Start()
