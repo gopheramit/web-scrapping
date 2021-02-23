@@ -12,6 +12,8 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/geziyor/geziyor"
+	"github.com/geziyor/geziyor/client"
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/markbates/goth/gothic"
@@ -20,6 +22,8 @@ import (
 const otpChars = "1234567890"
 
 var userID int
+
+//type contextKey string
 
 func GenerateOTP(length int) (string, error) {
 	buffer := make([]byte, length)
@@ -193,6 +197,10 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+
+	//ctx := r.Context()
+	//ctx = context.WithValue(r.Context(), "userID", id)
+	//r = r.WithContext(ctx)
 	otp, err := GenerateOTP(6)
 	userID = id
 	from := "flutterproject13@gmail.com"
@@ -257,6 +265,9 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
+	//userID := r.Context().Value("userID")
+	//fmt.Println(userID)
+
 	s, err := app.otps.GetData(userID)
 	if err != nil {
 		fmt.Println(err)
@@ -374,4 +385,16 @@ func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func (app *application) JsRendering(w http.ResponseWriter, r *http.Request) {
+	geziyor.NewGeziyor(&geziyor.Options{
+		StartRequestsFunc: func(g *geziyor.Geziyor) {
+			g.GetRendered("https://jonathanmh.com", g.Opt.ParseFunc)
+		},
+		ParseFunc: func(g *geziyor.Geziyor, r *client.Response) {
+			fmt.Println(string(r.Body))
+		},
+		//BrowserEndpoint: "ws://localhost:8080",
+	}).Start()
 }
