@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	//"github.com/justinas/nosurf"
 )
 
 func secureHeader(next http.Handler) http.Handler {
@@ -50,8 +49,8 @@ func noSurf(next http.Handler) http.Handler {
 		Secure:   true,
 	})
 	return csrfHandler
-}*/
-
+}
+*/
 func (app *application) requireAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// If the user is not authenticated, redirect them to the login page and

@@ -2,6 +2,7 @@
 {{define "title"}}Verify OTP {{end}}
 {{define "main"}}
 <form action='/user/verify' method='POST'>
+
 {{with .Form}}
 <table align = "center" style = "text-align: right">
 <div>
@@ -25,5 +26,4 @@
 </div>
 {{end}}
 </form>
-
 {{end}}
