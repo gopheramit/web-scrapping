@@ -28,7 +28,7 @@ CREATE USER 'scrapit'@'localhost';
 ALTER USER 'scrapit'@'localhost' IDENTIFIED BY 'pass';
 
 GRANT CREATE,SELECT, INSERT, UPDATE,ALTER ON webscrap.* TO 'scrapit'@'localhost';
-mysql -D webscrap -u scrapits -p  
+mysql -D webscrap -u scrapit -p  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ALTER TABLE Otps
 DROP COLUMN otp;

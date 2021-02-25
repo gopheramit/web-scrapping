@@ -41,7 +41,7 @@ func (m *OtpModel) GetData(id int) (*models.Otps, error) {
 func (m *OtpModel) UppdateVerifyStatus(id int) (int, error) {
 	//fmt.Println(id, count)
 	//stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
-	stmt := `update Otps set verify=? where WHERE expires > UTC_TIMESTAMP() and id=?`
+	stmt := `update Otps set verify=? WHERE expires > UTC_TIMESTAMP() and id=?`
 	_, err := m.DB.Exec(stmt, true, id)
 	if err != nil {
 		return 1, err
