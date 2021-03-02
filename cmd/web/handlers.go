@@ -21,7 +21,7 @@ import (
 
 const otpChars = "1234567890"
 
-var userID int
+//var userID int
 
 //type contextKey string
 
@@ -202,7 +202,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	//ctx = context.WithValue(r.Context(), "userID", id)
 	//r = r.WithContext(ctx)
 	otp, err := GenerateOTP(6)
-	userID = id
+	//userID = id
 	from := "flutterproject13@gmail.com"
 	password := "iskcon123"
 	// Receiver email address.
@@ -241,14 +241,16 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	}
 	// Otherwise send a placeholder response (for now!).
 	//app.session.Put(r, "flash", "Your signup was successful. Please log in.")
+	app.session.Put(r, "UserID", id)
 	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
-	//http.Redirect(w, r, "/user/login", http.StatusSeeOther)
+
 }
 
 func (app *application) VerifyUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "verification.page.tmpl", &templateData{
 		Form: forms.New(nil),
 	})
+
 }
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login.page.tmpl", &templateData{
@@ -265,17 +267,16 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	otp := form.Get("otp")
 	fmt.Println("otp:", otp)
-	//userID := r.Context().Value("userID")
-	//fmt.Println(userID)
-
+	userID, ok := app.session.Get(r, "UserID").(int)
+	if !ok {
+		app.serverError(w, errors.New("type assertion to string failed"))
+	}
 	s, err := app.otps.GetData(userID)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("error in verify user getotp")
-	} //else {
-	//fmt.Println("retrived suceesfully")
-	//}
-	//t := time.now()
+	}
+
 	if s.Otp == otp {
 		_, err := app.otps.UppdateVerifyStatus(userID)
 		if err != nil {

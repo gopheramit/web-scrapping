@@ -26,6 +26,10 @@ type application struct {
 	Key           *string
 }
 
+//type contextKey string
+
+//const contextKeyIsAuthenticated = contextKey("isAuthenticated")
+
 func main() {
 
 	addr := flag.String("addr", ":4000", "HTTP network address")
@@ -48,7 +52,7 @@ func main() {
 	defer db.Close()
 
 	session := sessions.New([]byte(*secret))
-	session.Lifetime = 12 * time.Hour
+	session.Lifetime = 24 * time.Hour
 
 	app := &application{
 		errorLog:      errorLog,

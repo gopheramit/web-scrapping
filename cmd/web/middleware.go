@@ -68,12 +68,3 @@ func (app *application) requireAuthentication(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-
-/*
-func (app *application) USerContext(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := context.WithValue(r.Context(), contextKeyIsAuthenticated, true)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
-*/
