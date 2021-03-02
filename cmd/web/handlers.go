@@ -286,7 +286,8 @@ func (app *application) VerifyUser(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("error in verify user in getdata ")
 		}
 		if s.Verified == true {
-			http.Redirect(w, r, "/pricing", http.StatusSeeOther)
+			app.session.Put(r, "authenticatedUserID", userID)
+			http.Redirect(w, r, fmt.Sprintf("/scrap/%d", userID), http.StatusSeeOther)
 		} else {
 			app.render(w, r, "verification.page.tmpl", &templateData{Form: forms.New(nil)})
 			fmt.Println("Not verified")
