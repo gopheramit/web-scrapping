@@ -48,3 +48,14 @@ func (m *OtpModel) UppdateVerifyStatus(id int) (int, error) {
 	}
 	return 0, nil
 }
+
+func (m *OtpModel) UpdateOtp(id int, otp string) (int, error) {
+	//fmt.Println(id, count)
+	//stmt := `SELECT id, email,guid,created, expires FROM scraps WHERE expires > UTC_TIMESTAMP() AND guid= ?`
+	stmt := `update Otps set otp=? where id=?`
+	_, err := m.DB.Exec(stmt, otp, id)
+	if err != nil {
+		return 1, err
+	}
+	return 0, nil
+}

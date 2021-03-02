@@ -243,6 +243,53 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (app *application) resendOtp(w http.ResponseWriter, r *http.Request) {
+
+	otp, err := GenerateOTP(6)
+	//userID = id
+	from := "flutterproject13@gmail.com"
+	password := "iskcon123"
+	// Receiver email address.
+	to := []string{
+		"amittest53@gmail.com",
+	}
+	// smtp server configuration.
+	smtpHost := "smtp.gmail.com"
+	smtpPort := "587"
+	// Authentication.
+	auth := smtp.PlainAuth("", from, password, smtpHost)
+	t, _ := template.ParseFiles("ui/html/verificationcode.html")
+	var body bytes.Buffer
+	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body.Write([]byte(fmt.Sprintf("Subject: This is a test subject \n%s\n\n", mimeHeaders)))
+	t.Execute(&body, struct {
+		Name    string
+		Message string
+	}{
+		Name:    "Achal Agrawal",
+		Message: "Your OTP is : " + otp,
+	})
+	// Sending email.
+	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Email Sent!")
+	fmt.Println(otp)
+	userID, ok := app.session.Get(r, "UserID").(int)
+	if !ok {
+		app.serverError(w, errors.New("type assertion to string failed"))
+	}
+	fmt.Println(userID)
+	_, err = app.otps.UpdateOtp(userID, otp)
+	if err != nil {
+		fmt.Println("error in otp insert ")
+
+	}
+	http.Redirect(w, r, "/user/verify", http.StatusSeeOther)
+}
+
 func (app *application) VerifyUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "verification.page.tmpl", &templateData{
 		Form: forms.New(nil),
