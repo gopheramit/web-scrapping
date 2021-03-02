@@ -198,9 +198,6 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//ctx := r.Context()
-	//ctx = context.WithValue(r.Context(), "userID", id)
-	//r = r.WithContext(ctx)
 	otp, err := GenerateOTP(6)
 	//userID = id
 	from := "flutterproject13@gmail.com"
@@ -318,8 +315,7 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	// Add the ID of the current user to the session, so that they are now 'logged
-	// in'.
+	app.session.Put(r, "UserID", id)
 	s, err := app.otps.GetData(id)
 	if err != nil {
 		fmt.Println("error while verifying user login")
