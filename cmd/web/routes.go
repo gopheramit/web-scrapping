@@ -58,6 +58,7 @@ func (app *application) routes() http.Handler {
 	mux.Post("/user/logout", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.logoutUser))
 
 	mux.Get("/request", http.HandlerFunc(app.linkScrape))
+	mux.Get("/requestheaders", http.HandlerFunc(app.linkScrapeheaders))
 	mux.Get("/request/render", http.HandlerFunc(app.JsRendering))
 
 	//filesDir := http.Dir("./assets/")
