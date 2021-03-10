@@ -2,43 +2,17 @@ package main
 
 import (
 	"bytes"
-	"crypto/rand"
 	"errors"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"net/smtp"
 	"strconv"
 
-	"github.com/PuerkitoBio/goquery"
-	"github.com/geziyor/geziyor"
-	"github.com/geziyor/geziyor/client"
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/markbates/goth/gothic"
 )
-
-const otpChars = "1234567890"
-
-//var userID int
-
-//type contextKey string
-
-func GenerateOTP(length int) (string, error) {
-	buffer := make([]byte, length)
-	_, err := rand.Read(buffer)
-	if err != nil {
-		return "", err
-	}
-
-	otpCharsLength := len(otpChars)
-	for i := 0; i < length; i++ {
-		buffer[i] = otpChars[int(buffer[i])%otpCharsLength]
-	}
-
-	return string(buffer), nil
-}
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -53,8 +27,6 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "home.page.tmpl", &templateData{
 		Scraps: s,
 	})
-	//w.Write([]byte("hello from scrapper!"))
-
 }
 
 func (app *application) about(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +41,7 @@ func (app *application) pricing(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "pricing.page.tmpl", &templateData{
 		//Scrap: s,
 	})
-	//w.Write([]byte("About pricing!"))
+
 }
 
 func (app *application) showScrap(w http.ResponseWriter, r *http.Request) {
@@ -386,7 +358,31 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 	app.session.Put(r, "flash", "You've been logged out successfully!")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
+func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
+	key := (r.URL.Query().Get("api_key"))
+	url := r.URL.Query().Get("url")
+	html := true
+	js := r.URL.Query().Get("js")
+	header := r.URL.Query().Get("header")
+	fmt.Println(key, url, js, header, html)
+	s, err := app.scraps.GetKey(key)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
 
+		return
+	}
+	fmt.Println(s.Count)
+	if s.Count > 0 {
+		
+	}
+
+}
+
+/*
 //add swagger for following handler.
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 	key := (r.URL.Query().Get("api_key"))
@@ -442,7 +438,6 @@ func (app *application) linkScrapeheaders(w http.ResponseWriter, r *http.Request
 		} else {
 			app.serverError(w, err)
 		}
-
 		return
 	}
 	fmt.Println(s.Count)
@@ -511,3 +506,4 @@ func (app *application) JsRendering(w http.ResponseWriter, r *http.Request) {
 		//BrowserEndpoint: "ws://localhost:8080",
 	}).Start()
 }
+*/

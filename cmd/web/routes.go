@@ -57,9 +57,12 @@ func (app *application) routes() http.Handler {
 	mux.Get("/user/resend", dynamicMiddleware.ThenFunc(app.resendOtp))
 	mux.Post("/user/logout", dynamicMiddleware.Append(app.requireAuthentication).ThenFunc(app.logoutUser))
 
-	mux.Get("/request", http.HandlerFunc(app.linkScrape))
-	mux.Get("/requestheaders", http.HandlerFunc(app.linkScrapeheaders))
-	mux.Get("/request/render", http.HandlerFunc(app.JsRendering))
+	//mux.Get("/request", http.HandlerFunc(app.linkScrape))
+	//mux.Get("/requestheaders", http.HandlerFunc(app.linkScrapeheaders))
+	//mux.Get("/request/render", http.HandlerFunc(app.JsRendering))
+	mux.Get("/request", http.HandlerFunc(app.Decision))
+	mux.Get("/requestheaders", http.HandlerFunc(app.Decision))
+	mux.Get("/request/render", http.HandlerFunc(app.Decision))
 
 	//filesDir := http.Dir("./assets/")
 	//FileServer(mux, "/assets", filesDir)
