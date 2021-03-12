@@ -103,6 +103,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		fmt.Printf("Received message: %v\n", sd)
 		boolean := Negation(sd.Js)
 		fmt.Println(boolean)
+		//inkscrape(sd.Url)
 		//ed := EventData{
 		//	Name:      sd.Name,
 		//		Timestamp: sd.Timestamp,
@@ -114,6 +115,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 }
 
 func Negation(boolean bool) bool {
+	//time.Sleep(10)
 	if boolean == true {
 		return false
 	} else {
