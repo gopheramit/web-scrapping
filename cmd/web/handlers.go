@@ -362,9 +362,9 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 	key := (r.URL.Query().Get("api_key"))
 	url := r.URL.Query().Get("url")
 	html := true
-	js := r.URL.Query().Get("js")
+	js1 := r.URL.Query().Get("js")
 	header := r.URL.Query().Get("header")
-	fmt.Println(key, url, js, header, html)
+	fmt.Println(key, url, js1, header, html)
 	s, err := app.scraps.GetKey(key)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
@@ -377,7 +377,7 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(s.Count)
 	if s.Count > 0 {
-		
+		main1(url,js1)
 	}
 
 }

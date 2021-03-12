@@ -8,6 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/golangcollege/sessions v1.2.0
+	github.com/gopheramit/distributed-go-with-rabbitmq v0.0.0-20210310142753-22e4a34072de
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/sessions v1.2.1
 	github.com/justinas/alice v1.2.0
