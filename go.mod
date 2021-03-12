@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	cloud.google.com/go v0.79.0 // indirect
+	github.com/PuerkitoBio/goquery v1.6.1
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3 // indirect

@@ -377,7 +377,7 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(s.Count)
 	if s.Count > 0 {
-		main1(url,js1)
+		main1(url)
 	}
 
 }

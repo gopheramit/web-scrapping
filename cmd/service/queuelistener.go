@@ -99,11 +99,12 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		d := gob.NewDecoder(r)
 		sd := new(dto.SensorMessage)
 		d.Decode(sd)
-
+		fmt.Println(sd)
 		fmt.Printf("Received message: %v\n", sd)
 		boolean := Negation(sd.Js)
+		fmt.Println("Js :")
 		fmt.Println(boolean)
-		//inkscrape(sd.Url)
+		linkscrape(sd.Url)
 		//ed := EventData{
 		//	Name:      sd.Name,
 		//		Timestamp: sd.Timestamp,

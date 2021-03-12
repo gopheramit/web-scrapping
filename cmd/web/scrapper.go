@@ -15,7 +15,7 @@ import (
 var url = "amqp://guest:guest@localhost:5672"
 var name = flag.String("name", "sensor", "name of the sensor")
 
-func main1(url1 string, js1 string) {
+func main1(url1 string) {
 	flag.Parse()
 	conn, ch := qutils.GetChannel(url)
 	defer conn.Close()

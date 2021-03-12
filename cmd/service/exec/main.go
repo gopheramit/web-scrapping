@@ -4,11 +4,11 @@ import (
 	//"distributed/coordinator"
 	"fmt"
 
-	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/coordinator"
+	"github.com/gopheramit/web-scrapping/cmd/service"
 )
 
 func main() {
-	ql := coordinator.NewQueueListener()
+	ql := service.NewQueueListener()
 	go ql.ListenForNewSource()
 
 	var a string
