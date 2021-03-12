@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/gopheramit/web-scrapping/cmd/web/dto"
-	"github.com/gopheramit/web-scrapping/cmd/web/qutils"
+	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/dto"
+	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
 	"github.com/streadway/amqp"
 )
 
@@ -33,10 +33,15 @@ func main1(url1 string, js1 string) {
 	go listenForDiscoverRequests(discoveryQueue.Name, ch)
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
+	//if js1 == "true" {
+	//	js1 = true
+
+	//}
+	//js1 = true
 	reading := dto.SensorMessage{
 		Name:      *name,
 		Url:       url1,
-		Js:        js1,
+		Js:        true,
 		Timestamp: time.Now(),
 	}
 	buf.Reset()
