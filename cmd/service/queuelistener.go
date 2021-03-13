@@ -1,25 +1,24 @@
-package main
+package service
 
 import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"log"
-	"net/http"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/dto"
 	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
+	"github.com/gopheramit/web-scrapping/cmd/service/models"
 	"github.com/streadway/amqp"
 )
 
 const url = "amqp://guest:guest@localhost:5672"
 
 type QueueListener struct {
-	conn    *amqp.Connection
-	ch      *amqp.Channel
-	sources map[string]<-chan amqp.Delivery
-	//ea      *EventAggregator
+	conn         *amqp.Connection
+	ch           *amqp.Channel
+	sources      map[string]<-chan amqp.Delivery
+	ScrapRequest *models.ScrapRequestModel
+	//ea      *EventAggregatorw
 }
 
 func NewQueueListener() *QueueListener {
@@ -107,7 +106,37 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		boolean := Negation(sd.Js)
 		fmt.Println("Js :")
 		fmt.Println(boolean)
-		app1.linkscrape(sd.Url) // sd.Key)
+		ql.linkscrape(sd.Url)
+
+		/*
+			res, err := http.Get(sd.Url)
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer res.Body.Close()
+
+			doc, err := goquery.NewDocumentFromReader(res.Body)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(doc.Html())
+
+			key1 := genUlid()
+			keystr1 := key1.String()
+			fmt.Println(keystr1)
+			resullt, err := doc.Html()
+
+			stmt := `INSERT INTO ScrapRequest (uuid,guid,BLOBData)VALUES(?,?,?)`
+			_, err = db.Exec(stmt, keystr1, keystr1, []byte(resullt))
+		*/
+		//err = app1.ScrapRequest.Insert(keystr1, keystr1, []byte(resullt))
+		//if err != nil {
+		//	fmt.Println("error linkscrape")
+		//
+		//		} else {
+		//			fmt.Println("everthing ok")
+		//		}
+		//app1.linkscrape(sd.Url) // sd.Key)
 		//ed := EventData{
 		//	Name:      sd.Name,
 		//		Timestamp: sd.Timestamp,
@@ -126,6 +155,8 @@ func Negation(boolean bool) bool {
 		return true
 	}
 }
+
+/*
 func (app1 *application1) linkscrape(url string) { // key string) {
 	res, err := http.Get(url)
 	if err != nil {
@@ -151,3 +182,4 @@ func (app1 *application1) linkscrape(url string) { // key string) {
 		fmt.Println("everthing ok")
 	}
 }
+*/

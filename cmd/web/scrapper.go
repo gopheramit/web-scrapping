@@ -41,7 +41,7 @@ func main1(url1, key string) {
 	reading := dto.SensorMessage{
 		Name: *name,
 		Url:  url1,
-		//Key:       key,
+		//wwwwwwKey:       key,
 		Js:        true,
 		Timestamp: time.Now(),
 	}

@@ -9,6 +9,7 @@ import (
 	"os"
 
 	//"github.com/gopheramit/web-scrapping/cmd/service"
+	"github.com/gopheramit/web-scrapping/cmd/service"
 	"github.com/gopheramit/web-scrapping/cmd/service/models"
 )
 
@@ -17,7 +18,7 @@ type application1 struct {
 }
 
 func main() {
-	ql := NewQueueListener()
+	ql := service.NewQueueListener()
 	go ql.ListenForNewSource()
 	dsn := flag.String("dsn", "scrapit:pass@/webscrap?parseTime=true", "MySQL data source name")
 	flag.Parse()

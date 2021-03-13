@@ -1,9 +1,13 @@
-package main
+package service
 
 import (
+	"fmt"
+	"log"
 	"math/rand"
+	"net/http"
 	"time"
 
+	"github.com/PuerkitoBio/goquery"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid"
 )
@@ -16,8 +20,8 @@ func genUlid() ulid.ULID {
 }
 
 //add swagger for following handler.
-/*
-func (app1 *application1) linkscrape(url string) { // key string) {
+
+func (ql *QueueListener) linkscrape(url string) { // key string) {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
@@ -28,26 +32,30 @@ func (app1 *application1) linkscrape(url string) { // key string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(doc.Html())
+	//fmt.Println(doc.Html())
 
 	key1 := genUlid()
 	keystr1 := key1.String()
 	fmt.Println(keystr1)
 	resullt, err := doc.Html()
-	err = app1.ScrapRequest.Insert(keystr1, keystr1, []byte(resullt))
+
+	//var final []byte
+	//	final = []byte(resullt)
+	err = ql.ScrapRequest.Insert(keystr1, keystr1, []byte(resullt))
 	if err != nil {
 		fmt.Println("error linkscrape")
 
 	} else {
 		fmt.Println("everthing ok")
 	}
+}
 
-	// buf := new(bytes.Buffer)
-	// enc := gob.NewEncoder(buf)
+// buf := new(bytes.Buffer)
+// enc := gob.NewEncoder(buf)
 
-	// enc.Encode(doc.Html)
-	/////////////////////////////////////////////////////////////////////////////////////////
-	/*
+// enc.Encode(doc.Html)
+/////////////////////////////////////////////////////////////////////////////////////////
+/*
 		stmt := `INSERT INTO bloob(BLOBdata,created,count)VALUES(?,?,UTC_TIMESTAMP(),?)`
 
 		_, err = db.Exec(stmt, doc, 1000)
@@ -55,7 +63,7 @@ func (app1 *application1) linkscrape(url string) { // key string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-*/
+
 //////////////////////////////////////////////////////////////////////////////////////////
 //return doc.Html()
 //resullt, err := doc.Html()
