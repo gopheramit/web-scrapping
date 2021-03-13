@@ -10,16 +10,10 @@ import (
 
 	//"github.com/gopheramit/web-scrapping/cmd/service"
 	"github.com/gopheramit/web-scrapping/cmd/service"
-	"github.com/gopheramit/web-scrapping/cmd/service/models"
 )
 
-type application1 struct {
-	ScrapRequest *models.ScrapRequestModel
-}
-
 func main() {
-	ql := service.NewQueueListener()
-	go ql.ListenForNewSource()
+
 	dsn := flag.String("dsn", "scrapit:pass@/webscrap?parseTime=true", "MySQL data source name")
 	flag.Parse()
 
@@ -31,10 +25,9 @@ func main() {
 		errorLog.Fatal(err)
 	}
 	defer db.Close()
-	_ = &application1{
-		ScrapRequest: &models.ScrapRequestModel{DB: db},
-	}
-
+	ql := service.NewQueueListener(db)
+	go ql.ListenForNewSource()
+	//ql.ScrapRequest = DB: db
 	var a string
 	fmt.Scanln(&a)
 }

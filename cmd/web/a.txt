@@ -37,5 +37,6 @@ ALTER TABLE Otps
 ADD COLUMN otp CHAR(60) NOT NULL AFTER id;
 
 
-curl "http://localhost:4000/request?api_key=01EYX6F3MGPHS3J8MBG2E8XQDF&url=http://jonathanmh.com&js=true"
 
+
+curl "http://localhost:4000/request?api_key=01EYX6F3MGPHS3J8MBG2E8XQDF&url=http://jonathanmh.com&js=true"

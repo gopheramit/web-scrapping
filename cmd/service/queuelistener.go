@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/gob"
 	"fmt"
 
@@ -21,10 +22,11 @@ type QueueListener struct {
 	//ea      *EventAggregatorw
 }
 
-func NewQueueListener() *QueueListener {
+func NewQueueListener(db *sql.DB) *QueueListener {
 	ql := QueueListener{
 		sources: make(map[string]<-chan amqp.Delivery),
 		//ea:      NewEventAggregator(),
+		ScrapRequest: &models.ScrapRequestModel{DB: db},
 	}
 
 	ql.conn, ql.ch = qutils.GetChannel(url)
@@ -106,6 +108,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		boolean := Negation(sd.Js)
 		fmt.Println("Js :")
 		fmt.Println(boolean)
+
 		ql.linkscrape(sd.Url)
 
 		/*
