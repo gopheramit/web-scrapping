@@ -17,7 +17,5 @@ var (
 type ScrapResquest struct {
 	Uuid     string
 	Guid     string
-	BLOBData blob
+	BLOBData []byte
 }
-
-

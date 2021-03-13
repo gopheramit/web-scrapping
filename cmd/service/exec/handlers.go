@@ -1,4 +1,4 @@
-package service
+package main
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ func genUlid() ulid.ULID {
 }
 
 //add swagger for following handler.
-func linkscrape(url string) {
+func (app1 *aapplication1) linkscrape(url, key string) {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
@@ -33,11 +33,17 @@ func linkscrape(url string) {
 	}
 	fmt.Println(doc.Html())
 
-	key := genUlid()
-	keystr := key.String()
+	key1 := genUlid()
+	keystr1 := key1.String()
+	fmt.Println(keystr1)
+	resullt, err := doc.Html()
+	err = app1.ScrapRequest.Insert(key, key1, []byte(resullt))
+	if err != nil {
+		fmt.Println("error linkscrape")
 
-	
-
+	} else {
+		fmt.Println("everthing ok")
+	}
 
 	// buf := new(bytes.Buffer)
 	// enc := gob.NewEncoder(buf)

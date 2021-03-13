@@ -104,7 +104,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		boolean := Negation(sd.Js)
 		fmt.Println("Js :")
 		fmt.Println(boolean)
-		linkscrape(sd.Url)
+		linkscrape(sd.Url, sd.Key)
 		//ed := EventData{
 		//	Name:      sd.Name,
 		//		Timestamp: sd.Timestamp,

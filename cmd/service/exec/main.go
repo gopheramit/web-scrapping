@@ -9,7 +9,12 @@ import (
 	"os"
 
 	"github.com/gopheramit/web-scrapping/cmd/service"
+	"github.com/gopheramit/web-scrapping/cmd/service/models"
 )
+
+type application1 struct {
+	ScrapRequest *models.ScrapRequestModel
+}
 
 func main() {
 	ql := service.NewQueueListener()
@@ -25,6 +30,9 @@ func main() {
 		errorLog.Fatal(err)
 	}
 	defer db.Close()
+	app1 := &application1{
+		ScrapRequest: &models.ScrapRequestModel{DB: db},
+	}
 
 	var a string
 	fmt.Scanln(&a)

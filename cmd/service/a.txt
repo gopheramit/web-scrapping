@@ -6,3 +6,8 @@ count int NOT NULL,
 created DATETIME NOT NULL
 );
 
+CREATE TABLE ScrapRequest (
+uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+guid VARCHAR(36),
+BLOBData blob
+);

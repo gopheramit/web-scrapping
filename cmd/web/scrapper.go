@@ -15,7 +15,7 @@ import (
 var url = "amqp://guest:guest@localhost:5672"
 var name = flag.String("name", "sensor", "name of the sensor")
 
-func main1(url1 string) {
+func main1(url1, key string) {
 	flag.Parse()
 	conn, ch := qutils.GetChannel(url)
 	defer conn.Close()
@@ -41,6 +41,7 @@ func main1(url1 string) {
 	reading := dto.SensorMessage{
 		Name:      *name,
 		Url:       url1,
+		Key:       key,
 		Js:        true,
 		Timestamp: time.Now(),
 	}
