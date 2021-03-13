@@ -39,9 +39,9 @@ func main1(url1, key string) {
 	//}
 	//js1 = true
 	reading := dto.SensorMessage{
-		Name:      *name,
-		Url:       url1,
-		Key:       key,
+		Name: *name,
+		Url:  url1,
+		//Key:       key,
 		Js:        true,
 		Timestamp: time.Now(),
 	}

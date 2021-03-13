@@ -1,13 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"math/rand"
-	"net/http"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid"
 )
@@ -20,7 +16,8 @@ func genUlid() ulid.ULID {
 }
 
 //add swagger for following handler.
-func (app1 *aapplication1) linkscrape(url, key string) {
+/*
+func (app1 *application1) linkscrape(url string) { // key string) {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +34,7 @@ func (app1 *aapplication1) linkscrape(url, key string) {
 	keystr1 := key1.String()
 	fmt.Println(keystr1)
 	resullt, err := doc.Html()
-	err = app1.ScrapRequest.Insert(key, key1, []byte(resullt))
+	err = app1.ScrapRequest.Insert(keystr1, keystr1, []byte(resullt))
 	if err != nil {
 		fmt.Println("error linkscrape")
 
@@ -58,12 +55,11 @@ func (app1 *aapplication1) linkscrape(url, key string) {
 		if err != nil {
 			fmt.Println(err)
 		}
-	*/
-	//////////////////////////////////////////////////////////////////////////////////////////
-	//return doc.Html()
-	//resullt, err := doc.Html()
-	//w.Write([]byte(resullt))
-}
+*/
+//////////////////////////////////////////////////////////////////////////////////////////
+//return doc.Html()
+//resullt, err := doc.Html()
+//w.Write([]byte(resullt))
 
 /*
 func openDB(dsn string) (*sql.DB, error) {

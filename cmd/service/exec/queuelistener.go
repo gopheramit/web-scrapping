@@ -1,10 +1,13 @@
-package service
+package main
 
 import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"log"
+	"net/http"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/dto"
 	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
 	"github.com/streadway/amqp"
@@ -104,7 +107,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		boolean := Negation(sd.Js)
 		fmt.Println("Js :")
 		fmt.Println(boolean)
-		linkscrape(sd.Url, sd.Key)
+		app1.linkscrape(sd.Url) // sd.Key)
 		//ed := EventData{
 		//	Name:      sd.Name,
 		//		Timestamp: sd.Timestamp,
@@ -121,5 +124,30 @@ func Negation(boolean bool) bool {
 		return false
 	} else {
 		return true
+	}
+}
+func (app1 *application1) linkscrape(url string) { // key string) {
+	res, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(doc.Html())
+
+	key1 := genUlid()
+	keystr1 := key1.String()
+	fmt.Println(keystr1)
+	resullt, err := doc.Html()
+	err = app1.ScrapRequest.Insert(keystr1, keystr1, []byte(resullt))
+	if err != nil {
+		fmt.Println("error linkscrape")
+
+	} else {
+		fmt.Println("everthing ok")
 	}
 }
