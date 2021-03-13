@@ -1,0 +1,8 @@
+CREATE TABLE bloob (
+id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+guid VARCHAR(36),
+BLOBData blob,
+count int NOT NULL,
+created DATETIME NOT NULL
+);
+

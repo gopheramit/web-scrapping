@@ -3,10 +3,21 @@ package service
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/oklog/ulid"
 )
+
+func genUlid() ulid.ULID {
+	t := time.Now().UTC()
+	entropy := rand.New(rand.NewSource(t.UnixNano()))
+	id := ulid.MustNew(ulid.Timestamp(t), entropy)
+	return id
+}
 
 //add swagger for following handler.
 func linkscrape(url string) {
@@ -21,11 +32,45 @@ func linkscrape(url string) {
 		log.Fatal(err)
 	}
 	fmt.Println(doc.Html())
+
+	key := genUlid()
+	keystr := key.String()
+
+	
+
+
+	// buf := new(bytes.Buffer)
+	// enc := gob.NewEncoder(buf)
+
+	// enc.Encode(doc.Html)
+	/////////////////////////////////////////////////////////////////////////////////////////
+	/*
+		stmt := `INSERT INTO bloob(BLOBdata,created,count)VALUES(?,?,UTC_TIMESTAMP(),?)`
+
+		_, err = db.Exec(stmt, doc, 1000)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+	*/
+	//////////////////////////////////////////////////////////////////////////////////////////
 	//return doc.Html()
 	//resullt, err := doc.Html()
 	//w.Write([]byte(resullt))
 }
 
+/*
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+*/
 /*
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {
 	key := (r.URL.Query().Get("api_key"))
@@ -86,7 +131,7 @@ func (app *application) linkScrapeheaders(w http.ResponseWriter, r *http.Request
 	}
 	fmt.Println(s.Count)
 	if s.Count > 0 {
-		//****
+		//**
 		//  Use this url to test : http://httpbin.org/anything
 		//**
 		myCookie := &http.Cookie{
