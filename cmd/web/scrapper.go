@@ -7,7 +7,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/dto"
 	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
 	"github.com/streadway/amqp"
 )
@@ -38,10 +37,10 @@ func main1(url1, key string) {
 
 	//}
 	//js1 = true
-	reading := dto.SensorMessage{
-		Name: *name,
-		Url:  url1,
-		//wwwwwwKey:       key,
+	reading := &SensorMessage{
+		Name:      *name,
+		Url:       url1,
+		Key:       key,
 		Js:        true,
 		Timestamp: time.Now(),
 	}

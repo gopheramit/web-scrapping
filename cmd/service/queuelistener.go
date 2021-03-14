@@ -6,9 +6,13 @@ import (
 	"encoding/gob"
 	"fmt"
 
-	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/dto"
-	"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
+	//"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/dto"
+	//"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
+	//"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
+	//git"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
 	"github.com/gopheramit/web-scrapping/cmd/service/models"
+	"github.com/gopheramit/web-scrapping/cmd/web/dto"
+	"github.com/gopheramit/web-scrapping/cmd/web/qutils"
 	"github.com/streadway/amqp"
 )
 
@@ -109,7 +113,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		fmt.Println("Js :")
 		fmt.Println(boolean)
 
-		ql.linkscrape(sd.Url)
+		ql.linkscrape(sd.Url, sd.Key)
 
 		/*
 			res, err := http.Get(sd.Url)
