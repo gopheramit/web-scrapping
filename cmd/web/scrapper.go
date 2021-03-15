@@ -6,7 +6,9 @@ import (
 	"flag"
 	"log"
 	"time"
+
 	"github.com/gopheramit/web-scrapping/cmd/web/qutils"
+
 	//"github.com/gopheramit/distributed-go-with-rabbitmq/src/distributed/qutils"
 	"github.com/gopheramit/web-scrapping/cmd/web/dto"
 	"github.com/streadway/amqp"
@@ -33,11 +35,6 @@ func main1(url1, key string) {
 	go listenForDiscoverRequests(discoveryQueue.Name, ch)
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
-	//if js1 == "true" {
-	//	js1 = true
-
-	//}
-	//js1 = true
 	reading := dto.SensorMessage{
 		Name:      *name,
 		Url:       url1,
@@ -58,7 +55,7 @@ func main1(url1, key string) {
 		false,          //immediate bool,
 		msg)            //msg amqp.Publishing)
 
-	log.Printf("Reading sent. Value: %v\n", msg)
+	//log.Printf("Reading sent. Value: %v\n", msg)
 }
 func listenForDiscoverRequests(name string, ch *amqp.Channel) {
 	msgs, _ := ch.Consume(

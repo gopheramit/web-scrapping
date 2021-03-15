@@ -63,7 +63,8 @@ func (app *application) routes() http.Handler {
 	mux.Get("/request", http.HandlerFunc(app.Decision))
 	mux.Get("/requestheaders", http.HandlerFunc(app.Decision))
 	mux.Get("/request/render", http.HandlerFunc(app.Decision))
-
+	//mux.Get("/echo", http.HandlerFunc(app.echo))
+	http.HandleFunc("/echo", app.echo)
 	//filesDir := http.Dir("./assets/")
 	//FileServer(mux, "/assets", filesDir)
 	fileServer := http.FileServer(http.Dir("./assets"))

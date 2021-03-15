@@ -45,7 +45,7 @@ func (ql *QueueListener) linkscrape(url, key string) { //string {
 	//err = enc.Encode(resullt)
 	//final := []byte(buf.Bytes())
 	//fmt.Println(final)
-	err = ql.ScrapRequest.Insert(key, keystr1, final)
+	err = ql.ScrapRequest.Insert(keystr1, key, final)
 	if err != nil {
 		fmt.Println("error linkscrape")
 

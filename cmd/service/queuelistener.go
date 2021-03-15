@@ -8,6 +8,7 @@ import (
 
 	"github.com/gopheramit/web-scrapping/cmd/web/dto"
 	"github.com/gopheramit/web-scrapping/cmd/web/qutils"
+	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
 	"github.com/streadway/amqp"
 )
 
@@ -17,7 +18,7 @@ type QueueListener struct {
 	conn         *amqp.Connection
 	ch           *amqp.Channel
 	sources      map[string]<-chan amqp.Delivery
-	ScrapRequest *models.ScrapRequestModel
+	ScrapRequest *mysql.ScrapRequestModel
 	//ea      *EventAggregatorw
 }
 
@@ -25,7 +26,7 @@ func NewQueueListener(db *sql.DB) *QueueListener {
 	ql := QueueListener{
 		sources: make(map[string]<-chan amqp.Delivery),
 		//ea:      NewEventAggregator(),
-		ScrapRequest: &models.ScrapRequestModel{DB: db},
+		ScrapRequest: &mysql.ScrapRequestModel{DB: db},
 	}
 
 	ql.conn, ql.ch = qutils.GetChannel(url)

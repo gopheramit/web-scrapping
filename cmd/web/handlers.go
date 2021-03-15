@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/smtp"
 	"strconv"
-	"time"
 
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
@@ -17,10 +16,7 @@ import (
 	"github.com/markbates/goth/gothic"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-}
+var upgrader = websocket.Upgrader{}
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -387,17 +383,21 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 	if s.Count > 0 {
 		main1(url, key)
 	}
-	time.Sleep(10)
+	//time.Sleep(1)
+
+	//ttp.Redirect(w, r, "ws://"+r.Host+"/echo", http.StatusSeeOther)
 	app.echo(w, r)
 }
 
 func (app *application) echo(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("inecho before connection")
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("upgrade:", err)
 		return
 	}
 	defer c.Close()
+	fmt.Println("in echo")
 	for {
 		message, err := app.ScrapRequest.GetData("01F0QJ5ND3MNZT0E22ZTCSE2HK")
 		//mt, message, err := c.ReadMessage()

@@ -10,7 +10,6 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gopheramit/web-scrapping/cmd/service/models1"
 	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
 
 	//"github.com/gorilla/sessions"
@@ -25,7 +24,7 @@ type application struct {
 	otps          *mysql.OtpModel
 	session       *sessions.Session
 	Key           *string
-	ScrapRequest  *models1.ScrapRequestModel
+	ScrapRequest  *mysql.ScrapRequestModel
 }
 
 //type contextKey string
@@ -39,7 +38,8 @@ func main() {
 	secret := flag.String("secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret key")
 	usrKey := flag.String("key", " 01ETWM58TWCWJ3JZYWH2Q33B1N", "UserKey")
 	flag.Parse()
-
+	session := sessions.New([]byte(*secret))
+	session.Lifetime = 24 * time.Hour
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	templateCache, err := newTemplateCache("./ui/html/")
@@ -53,9 +53,6 @@ func main() {
 	}
 	defer db.Close()
 
-	session := sessions.New([]byte(*secret))
-	session.Lifetime = 24 * time.Hour
-
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
@@ -64,7 +61,7 @@ func main() {
 		otps:          &mysql.OtpModel{DB: db},
 		session:       session,
 		Key:           usrKey,
-		ScrapRequest:  &models1.ScrapRequestModel{DB: db},
+		ScrapRequest:  &mysql.ScrapRequestModel{DB: db},
 	}
 	//usrKey := "01ETWM58TWCWJ3JZYWH2Q33B1N"
 
