@@ -20,12 +20,12 @@ func main() {
 	// infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-	db, err := openDB(*dsn)
+	db1, err := openDB(*dsn)
 	if err != nil {
 		errorLog.Fatal(err)
 	}
-	defer db.Close()
-	ql := service.NewQueueListener(db)
+	defer db1.Close()
+	ql := service.NewQueueListener(db1)
 	go ql.ListenForNewSource()
 	//ql.ScrapRequest = DB: db
 	var a string
@@ -33,12 +33,12 @@ func main() {
 }
 
 func openDB(dsn string) (*sql.DB, error) {
-	db, err := sql.Open("mysql", dsn)
+	db1, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	}
-	if err = db.Ping(); err != nil {
+	if err = db1.Ping(); err != nil {
 		return nil, err
 	}
-	return db, nil
+	return db1, nil
 }

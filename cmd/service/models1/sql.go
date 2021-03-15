@@ -25,15 +25,15 @@ func (m *ScrapRequestModel) Insert(uuid, guid string, BLOBData []byte) error {
 	return nil
 }
 
-func (m *ScrapRequestModel) GetData(guid string) (*models1.ScrapRequest, error) {
+func (m *ScrapRequestModel) GetData(guid string) (*ScrapRequest, error) {
 
 	stmt := `SELECT BLOBData FROM ScrapRequest WHERE  guid = ?`
 	row := m.DB.QueryRow(stmt, guid)
-	s := &models1.ScrapRequest{}
-	err := row.Scan(&s.uuid, &s.guid, &s.BLOBData)
+	s := &ScrapRequest{}
+	err := row.Scan(&s.Uuid, &s.Guid, &s.BLOBData)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, models1.ErrNoRecord
+			return nil, ErrNoRecord
 		} else {
 			return nil, err
 		}

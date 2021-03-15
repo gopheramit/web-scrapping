@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"net/smtp"
 	"strconv"
+	"time"
 
-	"github.com/gopheramit/web-scrapping/cmd/service/models1"
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/gorilla/websocket"
@@ -387,14 +387,11 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 	if s.Count > 0 {
 		main1(url, key)
 	}
-
+	time.Sleep(10)
+	app.echo(w, r)
 }
 
-type Data struct {
-	ScrapRequest *models.ScrapRequestModel
-}
-
-func (d *Data) echo(w http.ResponseWriter, r *http.Request) {
+func (app *application) echo(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("upgrade:", err)
@@ -402,13 +399,13 @@ func (d *Data) echo(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 	for {
-		message, err := d.ScrapRequest.GetData()
+		message, err := app.ScrapRequest.GetData("01F0QJ5ND3MNZT0E22ZTCSE2HK")
 		//mt, message, err := c.ReadMessage()
 		if err != nil {
 			log.Println("read:", err)
 			break
 		}
-		log.Printf("recv: %s", message)
+		fmt.Println(message.BLOBData)
 		//err = c.WriteMessage(mt, message)
 		//if err != nil {
 		//	log.Println("write:", err)
