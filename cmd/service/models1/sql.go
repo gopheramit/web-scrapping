@@ -1,4 +1,4 @@
-package models
+package models1
 
 import (
 	"database/sql"
@@ -25,15 +25,15 @@ func (m *ScrapRequestModel) Insert(uuid, guid string, BLOBData []byte) error {
 	return nil
 }
 
-func (m *ScrapRequestModel) Get(guid string) (*models.ScrapRequest, error) {
+func (m *ScrapRequestModel) GetData(guid string) (*models1.ScrapRequest, error) {
 
 	stmt := `SELECT BLOBData FROM ScrapRequest WHERE  guid = ?`
 	row := m.DB.QueryRow(stmt, guid)
-	s := &models.ScrapRequest{}
+	s := &models1.ScrapRequest{}
 	err := row.Scan(&s.uuid, &s.guid, &s.BLOBData)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, models.ErrNoRecord
+			return nil, models1.ErrNoRecord
 		} else {
 			return nil, err
 		}

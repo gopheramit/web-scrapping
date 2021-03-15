@@ -10,6 +10,8 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gopheramit/web-scrapping/cmd/service/models1"
+	"github.com/gopheramit/web-scrapping/pkg/models"
 	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
 
 	//"github.com/gorilla/sessions"
@@ -24,6 +26,7 @@ type application struct {
 	otps          *mysql.OtpModel
 	session       *sessions.Session
 	Key           *string
+	ScrapRequest  *models.ScrapRequestModel
 }
 
 //type contextKey string
@@ -62,6 +65,7 @@ func main() {
 		otps:          &mysql.OtpModel{DB: db},
 		session:       session,
 		Key:           usrKey,
+		ScrapRequest:  &models.ScrapRequestModel{DB: db},
 	}
 	//usrKey := "01ETWM58TWCWJ3JZYWH2Q33B1N"
 
