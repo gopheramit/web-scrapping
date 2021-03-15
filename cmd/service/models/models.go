@@ -14,7 +14,7 @@ var (
 	ErrDuplicateEmail = errors.New("models: duplicate email")
 )
 
-type ScrapResquest struct {
+type ScrapRequest struct {
 	Uuid     string
 	Guid     string
 	BLOBData []byte

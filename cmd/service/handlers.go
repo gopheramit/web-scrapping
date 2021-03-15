@@ -21,7 +21,7 @@ func genUlid() ulid.ULID {
 
 //add swagger for following handler.
 
-func (ql *QueueListener) linkscrape(url, key string) {
+func (ql *QueueListener) linkscrape(url, key string) { //string {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
@@ -52,6 +52,7 @@ func (ql *QueueListener) linkscrape(url, key string) {
 	} else {
 		fmt.Println("everthing ok")
 	}
+	//return keystr1
 }
 
 // buf := new(bytes.Buffer)

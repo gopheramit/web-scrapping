@@ -12,6 +12,7 @@ require (
 	github.com/gopheramit/distributed-go-with-rabbitmq v0.0.0-20210310142753-22e4a34072de
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/sessions v1.2.1
+	github.com/gorilla/websocket v1.4.2
 	github.com/justinas/alice v1.2.0
 	github.com/markbates/goth v1.67.1
 	github.com/oklog/ulid v1.3.1

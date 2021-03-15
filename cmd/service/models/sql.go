@@ -2,7 +2,9 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	//"github.com/gopheramit/web-scrapping/pkg/models"
 	//"github.com/gopheramit/web-scrapping/pkg/models"
 )
 
@@ -21,4 +23,21 @@ func (m *ScrapRequestModel) Insert(uuid, guid string, BLOBData []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (m *ScrapRequestModel) Get(guid string) (*models.ScrapRequest, error) {
+
+	stmt := `SELECT BLOBData FROM ScrapRequest WHERE  guid = ?`
+	row := m.DB.QueryRow(stmt, guid)
+	s := &models.ScrapRequest{}
+	err := row.Scan(&s.uuid, &s.guid, &s.BLOBData)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+	return s, nil
+
 }
