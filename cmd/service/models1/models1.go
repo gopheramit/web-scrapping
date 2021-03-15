@@ -1,5 +1,5 @@
 package models1
-
+/*
 import (
 	"errors"
 )
@@ -19,3 +19,4 @@ type ScrapRequest struct {
 	Guid     string
 	BLOBData []byte
 }
+*/

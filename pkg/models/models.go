@@ -33,6 +33,12 @@ type Otps struct {
 	Expires  time.Time
 }
 
+type ScrapRequest struct {
+	Uuid     string
+	Guid     string
+	BLOBData []byte
+}
+
 /*
 type User struct {
 	ID             int

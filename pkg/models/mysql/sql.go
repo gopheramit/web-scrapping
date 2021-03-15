@@ -1,10 +1,11 @@
-package models1
+package mysql
 
-/*
 import (
 	"database/sql"
 	"errors"
 	"fmt"
+
+	"github.com/gopheramit/web-scrapping/pkg/models"
 	//"github.com/gopheramit/web-scrapping/pkg/models"
 	//"github.com/gopheramit/web-scrapping/pkg/models"
 )
@@ -26,15 +27,15 @@ func (m *ScrapRequestModel) Insert(uuid, guid string, BLOBData []byte) error {
 	return nil
 }
 
-func (m *ScrapRequestModel) GetData(guid string) (*ScrapRequest, error) {
+func (m *ScrapRequestModel) GetData(guid string) (*models.ScrapRequest, error) {
 
 	stmt := `SELECT BLOBData FROM ScrapRequest WHERE  guid = ?`
 	row := m.DB.QueryRow(stmt, guid)
-	s := &ScrapRequest{}
+	s := &models.ScrapRequest{}
 	err := row.Scan(&s.Uuid, &s.Guid, &s.BLOBData)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, ErrNoRecord
+			return nil, models.ErrNoRecord
 		} else {
 			return nil, err
 		}
@@ -42,4 +43,3 @@ func (m *ScrapRequestModel) GetData(guid string) (*ScrapRequest, error) {
 	return s, nil
 
 }
-*/
