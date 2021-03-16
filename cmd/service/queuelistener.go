@@ -109,7 +109,7 @@ func (ql *QueueListener) AddListener(msgs <-chan amqp.Delivery) {
 		fmt.Println("Js :")
 		fmt.Println(boolean)
 
-		ql.linkscrape(sd.Url, sd.Key)
+		ql.linkscrape(sd.Url, sd.Key, sd.Key1)
 
 		/*
 			res, err := http.Get(sd.Url)

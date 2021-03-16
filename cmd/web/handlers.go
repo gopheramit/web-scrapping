@@ -5,10 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"net/smtp"
 	"strconv"
+	"time"
 
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
@@ -380,14 +380,15 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println(s.Count)
+	key1 := app.genUlid()
+	keystr1 := key1.String()
 	if s.Count > 0 {
-		main1(url, key)
+		main1(url, key, keystr1)
 	}
+	time.Sleep(10)
+	message, err := app.ScrapRequest.GetData("01F0QJ5ND3MNZT0E22ZTCSE2HK")
+	fmt.Println(message.BLOBData)
 
-	//app.wsEndpoint(w, r)
-	//http.Redirect(w, r, "/echo", http.StatusSeeOther)
-	app.echo(w, r)
-	//homeTemplate1.Execute(w, "ws://"+r.Host+"/echo")
 }
 
 /*
@@ -414,6 +415,7 @@ func (app *application) wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	// through on our WebSocket connection
 	//reader(ws)
 }*/
+/*
 func (app *application) echo(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("inecho before connection")
 	c, err := upgrader.Upgrade(w, r, nil)
@@ -443,7 +445,7 @@ var homeTemplate1 = template.Must(template.New("").Parse(`
 <html>
 <head>
 <meta charset="utf-8">
-<script>  
+<script>
 window.addEventListener("load", function(evt) {
     var output = document.getElementById("output");
     var input = document.getElementById("input");
@@ -494,8 +496,8 @@ window.addEventListener("load", function(evt) {
 <body>
 <table>
 <tr><td valign="top" width="50%">
-<p>Click "Open" to create a connection to the server, 
-"Send" to send a message to the server and "Close" to close the connection. 
+<p>Click "Open" to create a connection to the server,
+"Send" to send a message to the server and "Close" to close the connection.
 You can change the message and send multiple times.
 <p>
 <form>
@@ -510,7 +512,7 @@ You can change the message and send multiple times.
 </body>
 </html>
 `))
-
+*/
 /*
 //add swagger for following handler.
 func (app *application) linkScrape(w http.ResponseWriter, r *http.Request) {

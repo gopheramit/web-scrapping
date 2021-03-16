@@ -21,7 +21,7 @@ func genUlid() ulid.ULID {
 
 //add swagger for following handler.
 
-func (ql *QueueListener) linkscrape(url, key string) { //string {
+func (ql *QueueListener) linkscrape(url, key, key1 string) { //string {
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
@@ -34,9 +34,9 @@ func (ql *QueueListener) linkscrape(url, key string) { //string {
 	}
 	//fmt.Println(doc.Html())
 
-	key1 := genUlid()
-	keystr1 := key1.String()
-	fmt.Println(keystr1)
+	//key1 := genUlid()
+	//keystr1 := key1.String()
+	//fmt.Println(keystr1)
 	resullt, err := doc.Html()
 	final := []byte(resullt)
 	//var final []byte
@@ -45,7 +45,7 @@ func (ql *QueueListener) linkscrape(url, key string) { //string {
 	//err = enc.Encode(resullt)
 	//final := []byte(buf.Bytes())
 	//fmt.Println(final)
-	err = ql.ScrapRequest.Insert(keystr1, key, final)
+	err = ql.ScrapRequest.Insert(key1, key, final)
 	if err != nil {
 		fmt.Println("error linkscrape")
 
