@@ -11,6 +11,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gopheramit/web-scrapping/pkg/models/mysql"
+	"github.com/gorilla/websocket"
 
 	//"github.com/gorilla/sessions"
 	"github.com/golangcollege/sessions"
@@ -25,11 +26,13 @@ type application struct {
 	session       *sessions.Session
 	Key           *string
 	ScrapRequest  *mysql.ScrapRequestModel
+	//ws            *Websocket
 }
 
 //type contextKey string
 
 //const contextKeyIsAuthenticated = contextKey("isAuthenticated")
+var upgrader = websocket.Upgrader{}
 
 func main() {
 
@@ -43,6 +46,8 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	templateCache, err := newTemplateCache("./ui/html/")
+
+	//ws := new WebSocket("ws://localhost:4000/")
 	if err != nil {
 		errorLog.Fatal(err)
 	}
@@ -62,6 +67,7 @@ func main() {
 		session:       session,
 		Key:           usrKey,
 		ScrapRequest:  &mysql.ScrapRequestModel{DB: db},
+		//ws:            Websocket,
 	}
 	//usrKey := "01ETWM58TWCWJ3JZYWH2Q33B1N"
 

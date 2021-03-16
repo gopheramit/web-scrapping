@@ -12,11 +12,11 @@ import (
 
 	"github.com/gopheramit/web-scrapping/pkg/forms"
 	"github.com/gopheramit/web-scrapping/pkg/models"
-	"github.com/gorilla/websocket"
 	"github.com/markbates/goth/gothic"
 )
 
-var upgrader = websocket.Upgrader{}
+//
+//var upgrader = websocket.Upgrader{}
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -383,12 +383,37 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 	if s.Count > 0 {
 		main1(url, key)
 	}
-	//time.Sleep(1)
 
-	//ttp.Redirect(w, r, "ws://"+r.Host+"/echo", http.StatusSeeOther)
+	//app.wsEndpoint(w, r)
+	//http.Redirect(w, r, "/echo", http.StatusSeeOther)
 	app.echo(w, r)
+	//homeTemplate1.Execute(w, "ws://"+r.Host+"/echo")
 }
 
+/*
+func home1(w http.ResponseWriter, r *http.Request) {
+	homeTemplate1.Execute(w, "ws://"+r.Host+"/echo")
+}*/
+/*
+func (app *application) wsEndpoint(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+
+	// upgrade this connection to a WebSocket
+	// connection
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Println("Client Connected")
+	err = ws.WriteMessage(1, []byte("Hi Client!"))
+	if err != nil {
+		log.Println(err)
+	}
+	// listen indefinitely for new messages coming
+	// through on our WebSocket connection
+	//reader(ws)
+}*/
 func (app *application) echo(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("inecho before connection")
 	c, err := upgrader.Upgrade(w, r, nil)
@@ -412,6 +437,79 @@ func (app *application) echo(w http.ResponseWriter, r *http.Request) {
 		//	break
 	}
 }
+
+var homeTemplate1 = template.Must(template.New("").Parse(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>  
+window.addEventListener("load", function(evt) {
+    var output = document.getElementById("output");
+    var input = document.getElementById("input");
+    var ws;
+    var print = function(message) {
+        var d = document.createElement("div");
+        d.textContent = message;
+        output.appendChild(d);
+    };
+    document.getElementById("open").onclick = function(evt) {
+        if (ws) {
+            return false;
+        }
+        ws = new WebSocket("{{.}}");
+        ws.onopen = function(evt) {
+            print("OPEN");
+        }
+        ws.onclose = function(evt) {
+            print("CLOSE");
+            ws = null;
+        }
+        ws.onmessage = function(evt) {
+            print("RESPONSE: " + evt.data);
+        }
+        ws.onerror = function(evt) {
+            print("ERROR: " + evt.data);
+        }
+        return false;
+    };
+    document.getElementById("send").onclick = function(evt) {
+        if (!ws) {
+            return false;
+        }
+        print("SEND: " + input.value);
+        ws.send(input.value);
+        return false;
+    };
+    document.getElementById("close").onclick = function(evt) {
+        if (!ws) {
+            return false;
+        }
+        ws.close();
+        return false;
+    };
+});
+</script>
+</head>
+<body>
+<table>
+<tr><td valign="top" width="50%">
+<p>Click "Open" to create a connection to the server, 
+"Send" to send a message to the server and "Close" to close the connection. 
+You can change the message and send multiple times.
+<p>
+<form>
+<button id="open">Open</button>
+<button id="close">Close</button>
+<p><input id="input" type="text" value="Hello world!">
+<button id="send">Send</button>
+</form>
+</td><td valign="top" width="50%">
+<div id="output"></div>
+</td></tr></table>
+</body>
+</html>
+`))
 
 /*
 //add swagger for following handler.
