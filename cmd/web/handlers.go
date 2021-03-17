@@ -386,8 +386,10 @@ func (app *application) Decision(w http.ResponseWriter, r *http.Request) {
 		main1(url, key, keystr1)
 	}
 	time.Sleep(10)
-	message, err := app.ScrapRequest.GetData("01F0QJ5ND3MNZT0E22ZTCSE2HK")
-	fmt.Println(message.BLOBData)
+	fmt.Println("calling get dATA")
+	message, err := app.ScrapRequest.GetData(key)
+	//fmt.Println(message.BLOBData)
+	w.Write([]byte(message.BLOBData))
 
 }
 
